@@ -4,8 +4,8 @@ import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
 const AdminIndex = () => {
     const admins = [
-        { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
-        { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
+        { id: 1, first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' },
+        { id: 2, first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com' },
     ];
 
     return (
@@ -34,7 +34,13 @@ const AdminIndex = () => {
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Name
+                                    First Name
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Last Name
                                 </th>
                                 <th
                                     scope="col"
@@ -57,12 +63,21 @@ const AdminIndex = () => {
                                         {admin.id}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {admin.name}
+                                        {admin.first_name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {admin.last_name}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {admin.email}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                        <Link
+                                            href={`/admin/manage-users/admins/${admin.id}`}
+                                            className="text-blue-600 hover:text-blue-900 mr-4"
+                                        >
+                                            View
+                                        </Link>
                                         <Link
                                             href={`/admin/manage-users/admins/${admin.id}/edit`}
                                             className="text-indigo-600 hover:text-indigo-900 mr-4"

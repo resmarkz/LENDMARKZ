@@ -41,6 +41,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/create', function () {
                 return Inertia::render('Admin/ManageUsers/Admins/Create');
             })->name('create');
+            Route::get('/{id}', function () {
+                return Inertia::render('Admin/ManageUsers/Admins/Show');
+            })->name('show');
             Route::get('/{id}/edit', function () {
                 return Inertia::render('Admin/ManageUsers/Admins/Edit');
             })->name('edit');
@@ -50,10 +53,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', function () {
                 return Inertia::render('Admin/ManageUsers/Clients/Index');
             })
-            ->name('index');
+                ->name('index');
             Route::get('/create', function () {
                 return Inertia::render('Admin/ManageUsers/Clients/Create');
             })->name('create');
+            Route::get('/{id}', function () {
+                return Inertia::render('Admin/ManageUsers/Clients/Show');
+            })->name('show');
             Route::get('/{id}/edit', function () {
                 return Inertia::render('Admin/ManageUsers/Clients/Edit');
             })->name('edit');
@@ -66,6 +72,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/create', function () {
                 return Inertia::render('Admin/ManageUsers/Collectors/Create');
             })->name('create');
+            Route::get('/{id}', function () {
+                return Inertia::render('Admin/ManageUsers/Collectors/Show');
+            })->name('show');
             Route::get('/{id}/edit', function () {
                 return Inertia::render('Admin/ManageUsers/Collectors/Edit');
             })->name('edit');

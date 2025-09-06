@@ -4,7 +4,7 @@ import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
 const CollectorEdit = () => {
     // Placeholder for collector data, in a real app this would come from props/backend
-    const collector = { id: 1, name: 'Charlie Green', email: 'charlie.green@example.com' };
+    const collector = { id: 1, first_name: 'Charlie', last_name: 'Green', email: 'charlie.green@example.com', contact_number: '777-888-9999', date_of_birth: '1992-11-15', status: 'active' };
 
     return (
         <AdminDashboardLayout>
@@ -12,12 +12,22 @@ const CollectorEdit = () => {
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Edit Collector: {collector.name}</h1>
                 <form className="space-y-6">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name:</label>
+                        <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
-                            defaultValue={collector.name}
+                            id="first_name"
+                            name="first_name"
+                            defaultValue={collector.first_name}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            defaultValue={collector.last_name}
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
@@ -40,6 +50,38 @@ const CollectorEdit = () => {
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             placeholder="Enter new password if you want to change it"
                         />
+                    </div>
+                    <div>
+                        <label htmlFor="contact_number" className="block text-sm font-medium text-gray-700 mb-1">Contact Number:</label>
+                        <input
+                            type="text"
+                            id="contact_number"
+                            name="contact_number"
+                            defaultValue={collector.contact_number}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth:</label>
+                        <input
+                            type="date"
+                            id="date_of_birth"
+                            name="date_of_birth"
+                            defaultValue={collector.date_of_birth}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status:</label>
+                        <select
+                            id="status"
+                            name="status"
+                            defaultValue={collector.status}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
                     </div>
                     <div className="flex items-center justify-end gap-4 mt-6">
                         <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

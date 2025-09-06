@@ -4,8 +4,8 @@ import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
 const ClientIndex = () => {
     const clients = [
-        { id: 1, name: 'Alice Brown', email: 'alice.brown@example.com' },
-        { id: 2, name: 'Bob White', email: 'bob.white@example.com' },
+        { id: 1, first_name: 'Alice', last_name: 'Brown', email: 'alice.brown@example.com', address: '123 Main St', contact_number: '111-222-3333', date_of_birth: '1990-01-01', source_of_income: 'Software Engineer' },
+        { id: 2, first_name: 'Bob', last_name: 'White', email: 'bob.white@example.com', address: '456 Oak Ave', contact_number: '444-555-6666', date_of_birth: '1985-05-10', source_of_income: 'Doctor' },
     ];
 
     return (
@@ -34,13 +34,43 @@ const ClientIndex = () => {
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Name
+                                    First Name
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Last Name
                                 </th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
                                     Email
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Address
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Contact Number
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Date of Birth
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Source of Income
                                 </th>
                                 <th
                                     scope="col"
@@ -57,12 +87,33 @@ const ClientIndex = () => {
                                         {client.id}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.name}
+                                        {client.first_name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.last_name}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {client.email}
                                     </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.address}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.contact_number}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.date_of_birth}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.source_of_income}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                        <Link
+                                            href={`/admin/manage-users/clients/${client.id}`}
+                                            className="text-blue-600 hover:text-blue-900 mr-4"
+                                        >
+                                            View
+                                        </Link>
                                         <Link
                                             href={`/admin/manage-users/clients/${client.id}/edit`}
                                             className="text-indigo-600 hover:text-indigo-900 mr-4"

@@ -4,8 +4,8 @@ import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
 const CollectorIndex = () => {
     const collectors = [
-        { id: 1, name: 'Charlie Green', email: 'charlie.green@example.com' },
-        { id: 2, name: 'Diana Blue', email: 'diana.blue@example.com' },
+        { id: 1, first_name: 'Charlie', last_name: 'Green', email: 'charlie.green@example.com', contact_number: '777-888-9999', date_of_birth: '1992-11-15', status: 'active' },
+        { id: 2, first_name: 'Diana', last_name: 'Blue', email: 'diana.blue@example.com', contact_number: '123-456-7890', date_of_birth: '1988-03-20', status: 'inactive' },
     ];
 
     return (
@@ -34,13 +34,37 @@ const CollectorIndex = () => {
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Name
+                                    First Name
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Last Name
                                 </th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
                                     Email
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Contact Number
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Date of Birth
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Status
                                 </th>
                                 <th
                                     scope="col"
@@ -57,12 +81,30 @@ const CollectorIndex = () => {
                                         {collector.id}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {collector.name}
+                                        {collector.first_name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {collector.last_name}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {collector.email}
                                     </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {collector.contact_number}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {collector.date_of_birth}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {collector.status}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                        <Link
+                                            href={`/admin/manage-users/collectors/${collector.id}`}
+                                            className="text-blue-600 hover:text-blue-900 mr-4"
+                                        >
+                                            View
+                                        </Link>
                                         <Link
                                             href={`/admin/manage-users/collectors/${collector.id}/edit`}
                                             className="text-indigo-600 hover:text-indigo-900 mr-4"
