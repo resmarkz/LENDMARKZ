@@ -15,6 +15,32 @@ Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 })->name('register');
 
+Route::get('/register', function () {
+    return Inertia::render('Auth/Register');
+})->name('register');
+
+Route::prefix('client')->name('client.')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Client/Dashboard');
+    })->name('dashboard');
+
+    Route::get('/loans', function () {
+        return Inertia::render('Client/Index');
+    })->name('loans.index');
+
+    Route::get('/loans/create-loan', function () {
+            return Inertia::render('Client/CreateLoan');
+        })->name('loans.create-loan');
+
+    Route::get('/loans/{id}/pay', function () {
+            return Inertia::render('Client/PayLoan');
+        })->name('loans.pay');
+
+        Route::get('/loans/{id}', function () {
+            return Inertia::render('Client/Show');
+        })->name('loans.show');
+});
+
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
@@ -102,4 +128,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
             })->name('edit');
         });
     });
+});
+
+Route::prefix('collector')->name('collector.')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Collector/Dashboard');
+    })->name('dashboard');
+
+    Route::get('/loans', function () {
+        return Inertia::render('Collector/Index');
+    })->name('loans.index');
+
+    Route::get('/loans/{id}', function () {
+        return Inertia::render('Collector/Show');
+    })->name('loans.show');
+
+    Route::get('/payments/create', function () {
+        return Inertia::render('Collector/Create'); // Reusing Create for payment record
+    })->name('payments.create');
+
+    Route::get('/loans/{id}/record-payment', function () {
+        return Inertia::render('Collector/Create'); // Reusing Create for payment record
+    })->name('loans.record-payment');
 });
