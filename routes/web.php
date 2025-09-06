@@ -19,7 +19,7 @@ Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 })->name('register');
 
-Route::prefix('client')->name('client.')->group(function () {
+Route::prefix('client')->name('client.')->middleware(["auth", "role:client"])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Client/Dashboard');
     })->name('dashboard');
@@ -29,19 +29,19 @@ Route::prefix('client')->name('client.')->group(function () {
     })->name('loans.index');
 
     Route::get('/loans/create-loan', function () {
-            return Inertia::render('Client/CreateLoan');
-        })->name('loans.create-loan');
+        return Inertia::render('Client/CreateLoan');
+    })->name('loans.create-loan');
 
     Route::get('/loans/{id}/pay', function () {
-            return Inertia::render('Client/PayLoan');
-        })->name('loans.pay');
+        return Inertia::render('Client/PayLoan');
+    })->name('loans.pay');
 
-        Route::get('/loans/{id}', function () {
-            return Inertia::render('Client/Show');
-        })->name('loans.show');
+    Route::get('/loans/{id}', function () {
+        return Inertia::render('Client/Show');
+    })->name('loans.show');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(["auth", "role:admin"])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
@@ -130,7 +130,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-Route::prefix('collector')->name('collector.')->group(function () {
+Route::prefix('collector')->name('collector.')->middleware(["auth", "role:collector"])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Collector/Dashboard');
     })->name('dashboard');
@@ -144,10 +144,10 @@ Route::prefix('collector')->name('collector.')->group(function () {
     })->name('loans.show');
 
     Route::get('/payments/create', function () {
-        return Inertia::render('Collector/Create'); // Reusing Create for payment record
+        return Inertia::render('Collector/Create');
     })->name('payments.create');
 
     Route::get('/loans/{id}/record-payment', function () {
-        return Inertia::render('Collector/Create'); // Reusing Create for payment record
+        return Inertia::render('Collector/Create');
     })->name('loans.record-payment');
 });
