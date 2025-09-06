@@ -20,16 +20,38 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
 
-    Route::get('/loans', function () {
-        return Inertia::render('Admin/Loans');
-    })->name('loans');
+    Route::prefix('loans')->name('loans.')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Admin/Loans/Index');
+        })->name('index');
+        Route::get('/create', function () {
+            return Inertia::render('Admin/Loans/Create');
+        })->name('create');
+        Route::get('/{id}', function () {
+            return Inertia::render('Admin/Loans/Show');
+        })->name('show');
+        Route::get('/{id}/edit', function () {
+            return Inertia::render('Admin/Loans/Edit');
+        })->name('edit');
+    });
 
-    Route::get('/payments', function () {
-        return Inertia::render('Admin/Payments');
-    })->name('payments');
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Admin/Payments/Index');
+        })->name('index');
+        Route::get('/create', function () {
+            return Inertia::render('Admin/Payments/Create');
+        })->name('create');
+        Route::get('/{id}', function () {
+            return Inertia::render('Admin/Payments/Show');
+        })->name('show');
+        Route::get('/{id}/edit', function () {
+            return Inertia::render('Admin/Payments/Edit');
+        })->name('edit');
+    });
 
     Route::get('/reports', function () {
-        return Inertia::render('Admin/Reports');
+        return Inertia::render('Admin/Reports/Index');
     })->name('reports');
 
     // Admin User Management Routes
