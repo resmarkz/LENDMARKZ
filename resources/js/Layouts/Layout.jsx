@@ -3,19 +3,15 @@ import { Link } from "@inertiajs/react";
 function Layout({ children }) {
     return (
         <>
-            <nav className="w-full text-white bg-slate-900">
-                <div className="container mx-auto flex items-center justify-between py-4 ">
-                    <h1>LOGO</h1>
-                    <ul className="flex space-x-4">
-                        <li>
-                            <Link href="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link href="/page2">Page 2</Link>
-                        </li>
-                    </ul>
+            <header className="bg-white shadow-md">
+                <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 className="text-3xl font-bold text-gray-800">Lendmarkz</h1>
+                    <nav>
+                        <a href="/login" className="px-4 py-2 text-gray-600 hover:text-gray-800">Login</a>
+                        <a href="/register" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Register</a>
+                    </nav>
                 </div>
-            </nav>
+            </header>
 
             <main>{children}</main>
         </>
