@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('contact_number');
             $table->string('relationship');
-            $table->string('source_of_income')->nullable();
             $table->timestamps();
         });
     }
