@@ -3,15 +3,12 @@ import { Link, usePage } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-function AdminDashboardLayout({ children }) {
+function AdminDashboardLayout({ children, auth }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openDropdowns, setOpenDropdowns] = useState({});
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const userDropdownRef = useRef(null);
-    const {
-        url,
-        props: { auth },
-    } = usePage();
+    const { url } = usePage();
     const user = auth?.user;
 
     useEffect(() => {
@@ -21,7 +18,7 @@ function AdminDashboardLayout({ children }) {
                 !userDropdownRef.current.contains(event.target)
             ) {
                 setUserDropdownOpen(false);
-            };
+            }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
@@ -112,9 +109,9 @@ function AdminDashboardLayout({ children }) {
                 } lg:translate-x-0 lg:col-start-1 lg:row-span-2`}
             >
                 <div className="h-16 px-4 flex items-center justify-between border-b border-gray-200">
-                    <span className="text-indigo-600 font-bold text-xl">
+                    <a href="/" className="text-indigo-600 font-bold text-xl">
                         LENDMARK
-                    </span>
+                    </a>
                     <button
                         className="text-gray-400 lg:hidden"
                         onClick={() => setSidebarOpen(false)}
@@ -271,10 +268,11 @@ function AdminDashboardLayout({ children }) {
                             >
                                 <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <span className="text-indigo-600 font-medium">
-                                        {user?.name
-                                            .split(" ")
-                                            .map((n) => n[0])
-                                            .join("")
+                                        {user?.first_name
+                                            .charAt(0)
+                                            .toUpperCase()}{" "}
+                                        {user?.last_name
+                                            .charAt(0)
                                             .toUpperCase()}
                                     </span>
                                 </div>

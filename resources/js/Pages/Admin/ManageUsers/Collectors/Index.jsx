@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const CollectorIndex = () => {
+const CollectorIndex = ({ auth }) => {
     const collectors = [
         { id: 1, first_name: 'Charlie', last_name: 'Green', email: 'charlie.green@example.com', contact_number: '777-888-9999', date_of_birth: '1992-11-15', status: 'active' },
         { id: 2, first_name: 'Diana', last_name: 'Blue', email: 'diana.blue@example.com', contact_number: '123-456-7890', date_of_birth: '1988-03-20', status: 'inactive' },
     ];
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Collectors</h1>
                 <div className="mb-6">

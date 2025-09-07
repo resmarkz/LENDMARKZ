@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const ClientIndex = () => {
+const ClientIndex = ({ auth }) => {
     const clients = [
         { id: 1, first_name: 'Alice', last_name: 'Brown', email: 'alice.brown@example.com', address: '123 Main St', contact_number: '111-222-3333', date_of_birth: '1990-01-01', source_of_income: 'Software Engineer' },
         { id: 2, first_name: 'Bob', last_name: 'White', email: 'bob.white@example.com', address: '456 Oak Ave', contact_number: '444-555-6666', date_of_birth: '1985-05-10', source_of_income: 'Doctor' },
     ];
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Clients</h1>
                 <div className="mb-6">

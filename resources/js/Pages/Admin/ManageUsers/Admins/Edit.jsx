@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const AdminEdit = () => {
+const AdminEdit = ({ auth }) => {
     // Placeholder for admin data, in a real app this would come from props/backend
     const admin = { id: 1, first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' };
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Edit Admin: {admin.name}</h1>
                 <form className="space-y-6">

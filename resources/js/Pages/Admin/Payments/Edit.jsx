@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const PaymentEdit = () => {
+const PaymentEdit = ({ auth }) => {
     // Placeholder for payment data, in a real app this would come from props/backend
     const payment = {
         id: 1,
@@ -17,7 +17,7 @@ const PaymentEdit = () => {
     };
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Edit Payment: {payment.reference_no}</h1>
                 <form className="space-y-6">

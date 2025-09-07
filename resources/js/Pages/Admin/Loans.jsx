@@ -1,11 +1,10 @@
+import React from "react";
+import { Head } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-import React from 'react';
-import { Head } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
-
-const Loans = () => {
+const Loans = ({ auth }) => {
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <Head title="Loans" />
             <div className="p-6">
                 <h1 className="text-2xl font-bold">Loans</h1>

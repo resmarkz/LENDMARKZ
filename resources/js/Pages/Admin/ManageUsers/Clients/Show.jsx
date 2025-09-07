@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const ClientShow = () => {
+const ClientShow = ({ auth }) => {
     // Placeholder for client data, in a real app this would come from props/backend
     const client = { id: 1, first_name: 'Alice', last_name: 'Brown', email: 'alice.brown@example.com', address: '123 Main St', contact_number: '111-222-3333', date_of_birth: '1990-01-01', source_of_income: 'Software Engineer' };
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Client Details</h1>
                 <div className="border-t border-gray-200 px-4 py-5 sm:p-0">

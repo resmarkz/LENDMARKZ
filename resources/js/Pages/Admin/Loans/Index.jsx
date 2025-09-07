@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const LoanIndex = () => {
+const LoanIndex = ({ auth }) => {
     const loans = [
         {
             id: 1,
@@ -35,7 +35,7 @@ const LoanIndex = () => {
     ];
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Loans</h1>
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg shadow-inner">

@@ -1,15 +1,23 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-const LoanCreate = () => {
+const LoanCreate = ({ auth }) => {
+    const { auth } = usePage().props;
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Create New Loan</h1>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800">
+                    Create New Loan
+                </h1>
                 <form className="space-y-6">
                     <div>
-                        <label htmlFor="marketing_id" className="block text-sm font-medium text-gray-700 mb-1">Marketing ID:</label>
+                        <label
+                            htmlFor="marketing_id"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Marketing ID:
+                        </label>
                         <input
                             type="text"
                             id="marketing_id"
@@ -19,7 +27,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="collector_profile_id" className="block text-sm font-medium text-gray-700 mb-1">Collector:</label>
+                        <label
+                            htmlFor="collector_profile_id"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Collector:
+                        </label>
                         <select
                             id="collector_profile_id"
                             name="collector_profile_id"
@@ -31,7 +44,12 @@ const LoanCreate = () => {
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="client_profile_id" className="block text-sm font-medium text-gray-700 mb-1">Client:</label>
+                        <label
+                            htmlFor="client_profile_id"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Client:
+                        </label>
                         <select
                             id="client_profile_id"
                             name="client_profile_id"
@@ -43,7 +61,12 @@ const LoanCreate = () => {
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="principal_amount" className="block text-sm font-medium text-gray-700 mb-1">Principal Amount:</label>
+                        <label
+                            htmlFor="principal_amount"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Principal Amount:
+                        </label>
                         <input
                             type="number"
                             step="0.01"
@@ -54,7 +77,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="interest_rate" className="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%):</label>
+                        <label
+                            htmlFor="interest_rate"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Interest Rate (%):
+                        </label>
                         <input
                             type="number"
                             step="0.01"
@@ -65,7 +93,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="term_months" className="block text-sm font-medium text-gray-700 mb-1">Term (Months):</label>
+                        <label
+                            htmlFor="term_months"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Term (Months):
+                        </label>
                         <input
                             type="number"
                             id="term_months"
@@ -75,7 +108,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="monthly_payment" className="block text-sm font-medium text-gray-700 mb-1">Monthly Payment:</label>
+                        <label
+                            htmlFor="monthly_payment"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Monthly Payment:
+                        </label>
                         <input
                             type="number"
                             step="0.01"
@@ -86,7 +124,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="total_payable" className="block text-sm font-medium text-gray-700 mb-1">Total Payable:</label>
+                        <label
+                            htmlFor="total_payable"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Total Payable:
+                        </label>
                         <input
                             type="number"
                             step="0.01"
@@ -97,7 +140,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="release_date" className="block text-sm font-medium text-gray-700 mb-1">Release Date:</label>
+                        <label
+                            htmlFor="release_date"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Release Date:
+                        </label>
                         <input
                             type="date"
                             id="release_date"
@@ -106,7 +154,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">Due Date:</label>
+                        <label
+                            htmlFor="due_date"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Due Date:
+                        </label>
                         <input
                             type="date"
                             id="due_date"
@@ -115,7 +168,12 @@ const LoanCreate = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status:</label>
+                        <label
+                            htmlFor="status"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Status:
+                        </label>
                         <select
                             id="status"
                             name="status"
@@ -129,10 +187,16 @@ const LoanCreate = () => {
                         </select>
                     </div>
                     <div className="flex items-center justify-end gap-4 mt-6">
-                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button
+                            type="submit"
+                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
                             Save Loan
                         </button>
-                        <Link href="/admin/loans" className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <Link
+                            href="/admin/loans"
+                            className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
                             Cancel
                         </Link>
                     </div>

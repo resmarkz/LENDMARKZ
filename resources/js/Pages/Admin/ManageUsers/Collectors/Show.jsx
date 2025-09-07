@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const CollectorShow = () => {
+const CollectorShow = ({ auth }) => {
     // Placeholder for collector data, in a real app this would come from props/backend
     const collector = { id: 1, first_name: 'Charlie', last_name: 'Green', email: 'charlie.green@example.com', contact_number: '777-888-9999', date_of_birth: '1992-11-15', status: 'active' };
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Collector Details</h1>
                 <div className="border-t border-gray-200 px-4 py-5 sm:p-0">

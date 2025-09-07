@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
 
-const LoanEdit = () => {
+const LoanEdit = ({ auth }) => {
     // Placeholder for loan data, in a real app this would come from props/backend
     const loan = {
         id: 1,
@@ -20,7 +20,7 @@ const LoanEdit = () => {
     };
 
     return (
-        <AdminDashboardLayout>
+        <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Edit Loan: {loan.marketing_id}</h1>
                 <form className="space-y-6">
