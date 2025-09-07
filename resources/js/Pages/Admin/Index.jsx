@@ -1,11 +1,8 @@
 import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import usePage from "@inertiajs/react";
 
 const AdminIndex = ({ admins }) => {
-    const { auth } = usePage().props;
-
     return (
         <AdminDashboardLayout auth={auth}>
             <Head title="Admins" />

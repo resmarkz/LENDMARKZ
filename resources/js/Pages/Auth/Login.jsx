@@ -3,7 +3,7 @@ import { Head, useForm } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
 import Swal from "sweetalert2";
 
-const Login = () => {
+const Login = ({ auth }) => {
     const { data, setData, post, errors, processing } = useForm({
         email: "",
         password: "",
@@ -28,7 +28,7 @@ const Login = () => {
     };
 
     return (
-        <Layout>
+        <Layout auth={auth}>
             <Head title="Login" />
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
                 <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">

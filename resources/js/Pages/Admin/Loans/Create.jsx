@@ -3,7 +3,6 @@ import { Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
 const LoanCreate = ({ auth }) => {
-    const { auth } = usePage().props;
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">

@@ -33,7 +33,7 @@ const Register = () => {
         post("/register");
     };
     return (
-        <Layout>
+        <Layout auth={auth}>
             <Head title="Register" />
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
                 <div className="max-w-4xl w-full bg-white p-8 rounded-lg shadow-md">

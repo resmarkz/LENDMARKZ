@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 
-function Layout({ children }) {
+function Layout({ children, auth }) {
+    console.log(auth);
     return (
         <>
             <header className="bg-white shadow-md">
@@ -9,18 +10,27 @@ function Layout({ children }) {
                         Lendmarkz
                     </a>
                     <nav>
-                        <a
-                            href="/login"
-                            className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                        >
-                            Login
-                        </a>
-                        <a
-                            href="/register"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                            Register
-                        </a>
+                        {auth && !auth.user ? (
+                            <>
+                                <a
+                                    href="/login"
+                                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                >
+                                    Login
+                                </a>
+                                <a
+                                    href="/register"
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                >
+                                    Register
+                                </a>
+                            </>
+                        ) : (
+                            <div className="px-4 py-2 text-gray-800">
+                                Welcome, {auth.user.first_name}{" "}
+                                {auth.user.last_name}
+                            </div>
+                        )}
                     </nav>
                 </div>
             </header>
