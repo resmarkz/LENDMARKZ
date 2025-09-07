@@ -4,7 +4,7 @@ import Layout from "@/Layouts/Layout";
 import Swal from "sweetalert2";
 
 const Login = () => {
-    const { data, setData, post, errors, processing, reset } = useForm({
+    const { data, setData, post, errors, processing } = useForm({
         email: "",
         password: "",
         remember: false,
