@@ -36,7 +36,7 @@ function CollectorDashboardLayout({ children }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: "/collector/dashboard",
+                    href: '/collector/dashboard',
                 },
             ],
         },
@@ -46,12 +46,12 @@ function CollectorDashboardLayout({ children }) {
                 {
                     name: "My Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: "/collector/loans",
+                    href: '/collector/loans',
                 },
                 {
                     name: "Record Payment",
                     icon: "fas fa-money-bill-wave",
-                    href: "/collector/payments/create", // Assuming a generic payment creation for any loan
+                    href: '/collector/payments/create', // Assuming a generic payment creation for any loan
                 },
             ],
         },

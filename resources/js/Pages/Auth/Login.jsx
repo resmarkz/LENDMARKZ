@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
-import Swal from "sweetalert2";
+import errorHandler from "@/utils/errorHandler";
 
 const Login = ({ auth }) => {
     const { data, setData, post, errors, processing } = useForm({
@@ -11,15 +11,7 @@ const Login = ({ auth }) => {
     });
 
     useEffect(() => {
-        const errorKeys = Object.keys(errors);
-        if (errorKeys.length > 0) {
-            const errorMessages = errorKeys.map((key) => errors[key]);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                html: errorMessages.join("<br>"),
-            });
-        }
+        errorHandler(errors);
     }, [errors]);
 
     const handleSubmit = (e) => {
@@ -30,64 +22,115 @@ const Login = ({ auth }) => {
     return (
         <Layout auth={auth}>
             <Head title="Login" />
-            <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-                    <h2 className="text-3xl font-bold text-center mb-6">
-                        Login to Your Account
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="email"
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="max-w-4xl w-full mx-auto p-6 lg:p-8">
+                    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden p-8 md:p-12">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+                            Welcome Back!
+                        </h2>
+                        <p className="text-gray-600 mb-8">
+                            Sign in to continue to your account.
+                        </p>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Email Address
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        value={data.email}
+                                        onChange={(e) =>
+                                            setData("email", e.target.value)
+                                        }
+                                        className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="you@example.com"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Password
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        value={data.password}
+                                        onChange={(e) =>
+                                            setData("password", e.target.value)
+                                        }
+                                        className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <input
+                                        id="remember-me"
+                                        name="remember-me"
+                                        type="checkbox"
+                                        checked={data.remember}
+                                        onChange={(e) =>
+                                            setData(
+                                                "remember",
+                                                e.target.checked
+                                            )
+                                        }
+                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                    />
+                                    <label
+                                        htmlFor="remember-me"
+                                        className="ml-2 block text-sm text-gray-900"
+                                    >
+                                        Remember me
+                                    </label>
+                                </div>
+
+                                <div className="text-sm">
+                                    <a
+                                        href="#"
+                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                        Forgot your password?
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Sign in
+                                </button>
+                            </div>
+                        </form>
+                        <p className="mt-6 text-center text-sm text-gray-600">
+                            Not a member?{" "}
+                            <Link
+                                href="/register"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
                             >
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={data.email}
-                                onChange={(e) =>
-                                    setData("email", e.target.value)
-                                }
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="Enter your email"
-                            />
-                        </div>
-                        <div className="mb-6">
-                            <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="password"
-                            >
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                value={data.password}
-                                onChange={(e) =>
-                                    setData("password", e.target.value)
-                                }
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="Enter your password"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Sign In
-                            </button>
-                            <a
-                                href="#"
-                                className="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800"
-                            >
-                                Forgot Password?
-                            </a>
-                        </div>
-                    </form>
+                                Sign up now
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </Layout>

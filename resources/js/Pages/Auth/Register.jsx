@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
-import Swal from "sweetalert2";
+import errorHandler from "../../utils/errorHandler";
 
-const Register = () => {
+const Register = ({ auth }) => {
     const { data, setData, post, errors, processing } = useForm({
         first_name: "",
         last_name: "",
@@ -17,217 +17,238 @@ const Register = () => {
     });
 
     useEffect(() => {
-        const errorKeys = Object.keys(errors);
-        if (errorKeys.length > 0) {
-            const errorMessages = errorKeys.map((key) => errors[key]);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                html: errorMessages.join("<br>"),
-            });
-        }
+        errorHandler(errors);
     }, [errors]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post("/register");
+        post('/register');
     };
+
     return (
         <Layout auth={auth}>
             <Head title="Register" />
-            <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                <div className="max-w-4xl w-full bg-white p-8 rounded-lg shadow-md">
-                    <h2 className="text-3xl font-bold text-center mb-6">
-                        Create an Account
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="mb-4">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="max-w-4xl w-full mx-auto p-6 lg:p-8">
+                    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden p-8 md:p-12">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+                            Create Your Account
+                        </h2>
+                        <p className="text-gray-600 mb-8">
+                            Join us and start your journey.
+                        </p>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        htmlFor="first_name"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        First Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="first_name"
+                                        value={data.first_name}
+                                        onChange={(e) =>
+                                            setData(
+                                                "first_name",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="John"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="last_name"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="last_name"
+                                        value={data.last_name}
+                                        onChange={(e) =>
+                                            setData("last_name", e.target.value)
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="Doe"
+                                    />
+                                </div>
+                            </div>
+                            <div>
                                 <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="first_name"
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-700"
                                 >
-                                    First Name
+                                    Email Address
                                 </label>
                                 <input
-                                    type="text"
-                                    id="first_name"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="Enter your first name"
-                                    value={data.first_name}
+                                    type="email"
+                                    id="email"
+                                    value={data.email}
                                     onChange={(e) =>
-                                        setData("first_name", e.target.value)
+                                        setData("email", e.target.value)
                                     }
+                                    className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="you@example.com"
                                 />
                             </div>
-                            <div className="mb-4">
+                            <div>
                                 <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="last_name"
+                                    htmlFor="address"
+                                    className="block text-sm font-medium text-gray-700"
                                 >
-                                    Last Name
+                                    Address
                                 </label>
                                 <input
                                     type="text"
-                                    id="last_name"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="Enter your last name"
-                                    value={data.last_name}
+                                    id="address"
+                                    value={data.address}
                                     onChange={(e) =>
-                                        setData("last_name", e.target.value)
+                                        setData("address", e.target.value)
                                     }
+                                    className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="123 Main St"
                                 />
                             </div>
-                        </div>
-                        <div className="mb-4">
-                            <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="email"
-                            >
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="Enter your email"
-                                value={data.email}
-                                onChange={(e) =>
-                                    setData("email", e.target.value)
-                                }
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="address"
-                            >
-                                Address
-                            </label>
-                            <input
-                                type="text"
-                                id="address"
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="Enter your address"
-                                value={data.address}
-                                onChange={(e) =>
-                                    setData("address", e.target.value)
-                                }
-                            />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="mb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        htmlFor="contact_number"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Contact Number
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="contact_number"
+                                        value={data.contact_number}
+                                        onChange={(e) =>
+                                            setData(
+                                                "contact_number",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="123-456-7890"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="date_of_birth"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Date of Birth
+                                    </label>
+                                    <input
+                                        type="date"
+                                        id="date_of_birth"
+                                        value={data.date_of_birth}
+                                        onChange={(e) =>
+                                            setData(
+                                                "date_of_birth",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                </div>
+                            </div>
+                            <div>
                                 <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="contact_number"
+                                    htmlFor="source_of_income"
+                                    className="block text-sm font-medium text-gray-700"
                                 >
-                                    Contact Number
+                                    Source of Income
                                 </label>
-                                <input
-                                    type="text"
-                                    id="contact_number"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="Enter your contact number"
-                                    value={data.contact_number}
+                                <select
+                                    id="source_of_income"
+                                    value={data.source_of_income}
                                     onChange={(e) =>
                                         setData(
-                                            "contact_number",
+                                            "source_of_income",
                                             e.target.value
                                         )
                                     }
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="date_of_birth"
+                                    className="mt-1 block w-full py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 >
-                                    Date of Birth
-                                </label>
-                                <input
-                                    type="date"
-                                    id="date_of_birth"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={data.date_of_birth}
-                                    onChange={(e) =>
-                                        setData("date_of_birth", e.target.value)
-                                    }
-                                />
+                                    <option value="">Select an option</option>
+                                    <option value="Employment">
+                                        Employment
+                                    </option>
+                                    <option value="Business">Business</option>
+                                    <option value="Freelance">Freelance</option>
+                                    <option value="Investment">
+                                        Investment
+                                    </option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
-                        </div>
-                        <div className="mb-4">
-                            <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="source_of_income"
-                            >
-                                Source of Income
-                            </label>
-                            <select
-                                id="source_of_income"
-                                value={data.source_of_income}
-                                onChange={(e) =>
-                                    setData("source_of_income", e.target.value)
-                                }
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                            >
-                                <option value="">Select Source</option>
-                                <option value="Employment">Employment</option>
-                                <option value="Business">Business</option>
-                                <option value="Investments">Investments</option>
-                                <option value="Pension">Pension</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="mb-4">
-                                <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="password"
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        value={data.password}
+                                        onChange={(e) =>
+                                            setData("password", e.target.value)
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="password_confirmation"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Confirm Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="password_confirmation"
+                                        value={data.password_confirmation}
+                                        onChange={(e) =>
+                                            setData(
+                                                "password_confirmation",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="Enter your password"
-                                    value={data.password}
-                                    onChange={(e) =>
-                                        setData("password", e.target.value)
-                                    }
-                                />
+                                    Register
+                                </button>
                             </div>
-                            <div className="mb-6">
-                                <label
-                                    className="block text-gray-700 text-sm font-bold mb-2"
-                                    htmlFor="password_confirmation"
-                                >
-                                    Confirm Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password_confirmation"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="Confirm your password"
-                                    value={data.password_confirmation}
-                                    onChange={(e) =>
-                                        setData(
-                                            "password_confirmation",
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center">
-                            <button
-                                type="submit"
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        </form>
+                        <p className="mt-6 text-center text-sm text-gray-600">
+                            Already a member?{" "}
+                            <Link
+                                href="/login"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
                             >
-                                Register
-                            </button>
-                        </div>
-                    </form>
+                                Sign in
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </Layout>

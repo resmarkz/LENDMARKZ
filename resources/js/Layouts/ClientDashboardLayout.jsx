@@ -36,7 +36,7 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: "/client/dashboard",
+                    href: '/client/dashboard',
                 },
             ],
         },
@@ -46,12 +46,12 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "My Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: "/client/loans",
+                    href: '/client/loans',
                 },
                 {
                     name: "Apply for Loan",
                     icon: "fas fa-file-invoice-dollar",
-                    href: "/client/loans/create-loan",
+                    href: '/client/loans/create-loan',
                 },
             ],
         },

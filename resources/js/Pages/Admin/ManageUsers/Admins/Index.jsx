@@ -1,17 +1,14 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-const AdminIndex = ({ auth }) => {
-    const admins = [
-        { id: 1, first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' },
-        { id: 2, first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com' },
-    ];
-
+const AdminIndex = ({ auth, admins }) => {
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Admins</h1>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800">
+                    Manage Admins
+                </h1>
                 <div className="mb-6">
                     <Link
                         href="/admin/manage-users/admins/create"
@@ -84,9 +81,16 @@ const AdminIndex = ({ auth }) => {
                                         >
                                             Edit
                                         </Link>
-                                        <button className="text-red-600 hover:text-red-900">
-                                            Delete
-                                        </button>
+                                        {admin.id !== auth.user.id && (
+                                            <Link
+                                                href={`/admin/manage-users/admins/${admin.id}/delete`}
+                                                className="text-red-600 hover:text-red-900"
+                                                as="button"
+                                                method="DELETE"
+                                            >
+                                                Delete
+                                            </Link>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

@@ -34,7 +34,7 @@ function AdminDashboardLayout({ children, auth }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: "/admin/dashboard",
+                    href: '/admin/dashboard',
                 },
             ],
         },
@@ -44,39 +44,39 @@ function AdminDashboardLayout({ children, auth }) {
                 {
                     name: "Manage Users",
                     icon: "fas fa-users",
-                    href: "/admin/manage-users",
+                    href: '/admin/manage-users/admins',
                     subLinks: [
                         {
                             name: "Admins",
                             icon: "fas fa-user-shield",
-                            href: "/admin/manage-users/admins",
+                            href: '/admin/manage-users/admins'
                         },
                         {
                             name: "Collectors",
                             icon: "fas fa-user-tie",
-                            href: "/admin/manage-users/collectors",
+                            href: '/admin/manage-users/collectors',
                         },
                         {
                             name: "Clients",
                             icon: "fas fa-user-friends",
-                            href: "/admin/manage-users/clients",
+                            href: '/admin/manage-users/clients',
                         },
                     ],
                 },
                 {
                     name: "Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: "/admin/loans",
+                    href: '/admin/loans',
                 },
                 {
                     name: "Payments",
                     icon: "fas fa-money-bill-wave",
-                    href: "/admin/payments",
+                    href: '/admin/payments',
                 },
                 {
                     name: "Reports",
                     icon: "fas fa-chart-bar",
-                    href: "/admin/reports",
+                    href: '/admin/reports',
                 },
             ],
         },

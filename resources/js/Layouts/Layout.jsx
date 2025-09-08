@@ -1,7 +1,6 @@
 import { Link } from "@inertiajs/react";
 
 function Layout({ children, auth }) {
-    console.log(auth);
     return (
         <>
             <header className="bg-white shadow-md">
