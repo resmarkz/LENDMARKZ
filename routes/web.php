@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AdminManagementController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\CollectorProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -100,19 +100,13 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::prefix('clients')->name('clients.')->group(function () {
-                Route::get('/', function () {
-                    return Inertia::render('Admin/ManageUsers/Clients/Index');
-                })
-                    ->name('index');
-                Route::get('/create', function () {
-                    return Inertia::render('Admin/ManageUsers/Clients/Create');
-                })->name('create');
-                Route::get('/{id}', function () {
-                    return Inertia::render('Admin/ManageUsers/Clients/Show');
-                })->name('show');
-                Route::get('/{id}/edit', function () {
-                    return Inertia::render('Admin/ManageUsers/Clients/Edit');
-                })->name('edit');
+                Route::get('/', [ClientProfileController::class, 'index'])->name('index');
+                Route::get('/create', [ClientProfileController::class, 'create'])->name('create');
+                Route::post('/create', [ClientProfileController::class, 'store'])->name('store');
+                Route::get('/{client}', [ClientProfileController::class, 'show'])->name('show');
+                Route::get('/{client}/edit', [ClientProfileController::class, 'edit'])->name('edit');
+                Route::put('/{client}/edit', [ClientProfileController::class, 'update'])->name('update');
+                Route::delete('/{client}/delete', [ClientProfileController::class, 'destroy'])->name('destroy');
             });
 
             Route::prefix('collectors')->name('collectors.')->group(function () {

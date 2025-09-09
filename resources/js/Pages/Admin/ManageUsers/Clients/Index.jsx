@@ -1,17 +1,14 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-const ClientIndex = ({ auth }) => {
-    const clients = [
-        { id: 1, first_name: 'Alice', last_name: 'Brown', email: 'alice.brown@example.com', address: '123 Main St', contact_number: '111-222-3333', date_of_birth: '1990-01-01', source_of_income: 'Software Engineer' },
-        { id: 2, first_name: 'Bob', last_name: 'White', email: 'bob.white@example.com', address: '456 Oak Ave', contact_number: '444-555-6666', date_of_birth: '1985-05-10', source_of_income: 'Doctor' },
-    ];
-
+const ClientIndex = ({ auth, clients }) => {
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Clients</h1>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800">
+                    Manage Clients
+                </h1>
                 <div className="mb-6">
                     <Link
                         href="/admin/manage-users/clients/create"
@@ -96,16 +93,25 @@ const ClientIndex = ({ auth }) => {
                                         {client.email}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.address}
+                                        {client.client_profile[0]?.address}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.contact_number}
+                                        {
+                                            client.client_profile[0]
+                                                ?.contact_number
+                                        }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.date_of_birth}
+                                        {
+                                            client.client_profile[0]
+                                                ?.date_of_birth
+                                        }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.source_of_income}
+                                        {
+                                            client.client_profile[0]
+                                                ?.source_of_income
+                                        }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                         <Link
@@ -120,9 +126,14 @@ const ClientIndex = ({ auth }) => {
                                         >
                                             Edit
                                         </Link>
-                                        <button className="text-red-600 hover:text-red-900">
+                                        <Link
+                                            href={`/admin/manage-users/clients/${client.id}/delete`}
+                                            className="text-red-600 hover:text-red-900"
+                                            as="button"
+                                            method="DELETE"
+                                        >
                                             Delete
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

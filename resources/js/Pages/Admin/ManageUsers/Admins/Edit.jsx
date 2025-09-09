@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/utils/errorHandler";
+import errorHandler from "@/Utils/errorHandler";
 
 const AdminEdit = ({ auth, admin }) => {
-    const { data, setData, errors, processing, put } = useForm({
+    const { data, setData, processing, errors, put } = useForm({
         first_name: admin.first_name,
         last_name: admin.last_name,
         email: admin.email,
         current_password: "",
         password: "",
+        contact_number: admin.admin_profile[0].contact_number,
+        date_of_birth: admin.admin_profile[0].date_of_birth,
+        status: admin.admin_profile[0].status,
     });
 
     useEffect(() => {
@@ -39,11 +42,11 @@ const AdminEdit = ({ auth, admin }) => {
                             type="text"
                             id="first_name"
                             name="first_name"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={data.first_name}
+                            defaultValue={admin.first_name}
                             onChange={(e) =>
                                 setData("first_name", e.target.value)
                             }
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
                     <div>
@@ -57,11 +60,11 @@ const AdminEdit = ({ auth, admin }) => {
                             type="text"
                             id="last_name"
                             name="last_name"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={data.last_name}
+                            defaultValue={admin.last_name}
                             onChange={(e) =>
                                 setData("last_name", e.target.value)
                             }
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
                     <div>
@@ -75,14 +78,14 @@ const AdminEdit = ({ auth, admin }) => {
                             type="email"
                             id="email"
                             name="email"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={data.email}
+                            defaultValue={admin.email}
                             onChange={(e) => setData("email", e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
                     <div>
                         <label
-                            htmlFor="password"
+                            htmlFor="current_password"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
                             Current Password (optional):
@@ -92,7 +95,7 @@ const AdminEdit = ({ auth, admin }) => {
                             id="current_password"
                             name="current_password"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter current password to confirm changes"
+                            placeholder="Enter new password if you want to change it"
                             value={data.current_password}
                             onChange={(e) =>
                                 setData("current_password", e.target.value)
@@ -118,10 +121,70 @@ const AdminEdit = ({ auth, admin }) => {
                             }
                         />
                     </div>
+
+                    <div>
+                        <label
+                            htmlFor="contact_number"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Contact Number:
+                        </label>
+                        <input
+                            type="text"
+                            id="contact_number"
+                            name="contact_number"
+                            defaultValue={
+                                admin.admin_profile[0].contact_number
+                            }
+                            onChange={(e) =>
+                                setData("contact_number", e.target.value)
+                            }
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            htmlFor="date_of_birth"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Date of Birth:
+                        </label>
+                        <input
+                            type="date"
+                            id="date_of_birth"
+                            name="date_of_birth"
+                            defaultValue={
+                                admin.admin_profile[0].date_of_birth
+                            }
+                            onChange={(e) =>
+                                setData("date_of_birth", e.target.value)
+                            }
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            htmlFor="status"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Status:
+                        </label>
+                        <select
+                            id="status"
+                            name="status"
+                            defaultValue={admin.admin_profile[0].status}
+                            onChange={(e) => setData("status", e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
                     <div className="flex items-center justify-end gap-4 mt-6">
                         <button
                             type="submit"
                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={processing}
                         >
                             Save Changes
                         </button>
