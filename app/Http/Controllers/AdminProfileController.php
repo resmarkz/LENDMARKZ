@@ -6,6 +6,7 @@ use App\Models\AdminProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminProfileController extends Controller
@@ -97,7 +98,13 @@ class AdminProfileController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($admin->id),
+            ],
             'current_password' => 'nullable|string|min:8',
             'password' => 'nullable|string|min:8',
         ]);

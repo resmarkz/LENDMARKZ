@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminManagementController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CollectorProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -115,18 +116,13 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::prefix('collectors')->name('collectors.')->group(function () {
-                Route::get('/', function () {
-                    return Inertia::render('Admin/ManageUsers/Collectors/Index');
-                })->name('index');
-                Route::get('/create', function () {
-                    return Inertia::render('Admin/ManageUsers/Collectors/Create');
-                })->name('create');
-                Route::get('/{id}', function () {
-                    return Inertia::render('Admin/ManageUsers/Collectors/Show');
-                })->name('show');
-                Route::get('/{id}/edit', function () {
-                    return Inertia::render('Admin/ManageUsers/Collectors/Edit');
-                })->name('edit');
+                Route::get('/', [CollectorProfileController::class, 'index'])->name('index');
+                Route::get('/create', [CollectorProfileController::class, 'create'])->name('create');
+                Route::post('/create', [CollectorProfileController::class, 'store'])->name('store');
+                Route::get('/{collector}', [CollectorProfileController::class, 'show'])->name('show');
+                Route::get('/{collector}/edit', [CollectorProfileController::class, 'edit'])->name('edit');
+                Route::put('/{collector}/edit', [CollectorProfileController::class, 'update'])->name('update');
+                Route::delete('/{collector}/delete', [CollectorProfileController::class, 'destroy'])->name('destroy');
             });
         });
     });

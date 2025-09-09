@@ -1,17 +1,14 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-const CollectorIndex = ({ auth }) => {
-    const collectors = [
-        { id: 1, first_name: 'Charlie', last_name: 'Green', email: 'charlie.green@example.com', contact_number: '777-888-9999', date_of_birth: '1992-11-15', status: 'active' },
-        { id: 2, first_name: 'Diana', last_name: 'Blue', email: 'diana.blue@example.com', contact_number: '123-456-7890', date_of_birth: '1988-03-20', status: 'inactive' },
-    ];
-
+const CollectorIndex = ({ auth, collectors }) => {
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Collectors</h1>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800">
+                    Manage Collectors
+                </h1>
                 <div className="mb-6">
                     <Link
                         href="/admin/manage-users/collectors/create"
@@ -90,13 +87,19 @@ const CollectorIndex = ({ auth }) => {
                                         {collector.email}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {collector.contact_number}
+                                        {
+                                            collector.collector_profile[0]
+                                                .contact_number
+                                        }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {collector.date_of_birth}
+                                        {
+                                            collector.collector_profile[0]
+                                                .date_of_birth
+                                        }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {collector.status}
+                                        {collector.collector_profile[0].status}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                         <Link
@@ -111,9 +114,14 @@ const CollectorIndex = ({ auth }) => {
                                         >
                                             Edit
                                         </Link>
-                                        <button className="text-red-600 hover:text-red-900">
+                                        <Link
+                                            href={`/admin/manage-users/collectors/${collector.id}/delete`}
+                                            className="text-red-600 hover:text-red-900"
+                                            as="button"
+                                            method="DELETE"
+                                        >
                                             Delete
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
