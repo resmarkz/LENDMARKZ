@@ -6,7 +6,7 @@ const LoanIndex = ({ auth }) => {
     const loans = [
         {
             id: 1,
-            marketing_id: 'MKT001',
+            
             collector_profile_id: 1,
             client_profile_id: 1,
             principal_amount: 10000.00,
@@ -20,7 +20,7 @@ const LoanIndex = ({ auth }) => {
         },
         {
             id: 2,
-            marketing_id: 'MKT002',
+            
             collector_profile_id: 2,
             client_profile_id: 2,
             principal_amount: 20000.00,
@@ -41,16 +41,8 @@ const LoanIndex = ({ auth }) => {
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg shadow-inner">
                     <h2 className="text-xl font-semibold mb-4 text-gray-700">Filter Loans</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <label htmlFor="filter_marketing_id" className="block text-sm font-medium text-gray-700">Marketing ID:</label>
-                            <input
-                                type="text"
-                                id="filter_marketing_id"
-                                name="filter_marketing_id"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                placeholder="Filter by Marketing ID"
-                            />
-                        </div>
+                        
+                        
                         <div>
                             <label htmlFor="filter_status" className="block text-sm font-medium text-gray-700">Status:</label>
                             <select
@@ -107,7 +99,7 @@ const LoanIndex = ({ auth }) => {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marketing ID</th>
+                                
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal Amount</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest Rate</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Term (Months)</th>
@@ -123,7 +115,7 @@ const LoanIndex = ({ auth }) => {
                             {loans.map((loan) => (
                                 <tr key={loan.id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{loan.id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.marketing_id}</td>
+                                    
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.principal_amount}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.interest_rate}%</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.term_months}</td>

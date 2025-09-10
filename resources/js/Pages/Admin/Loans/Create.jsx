@@ -10,21 +10,7 @@ const LoanCreate = ({ auth }) => {
                     Create New Loan
                 </h1>
                 <form className="space-y-6">
-                    <div>
-                        <label
-                            htmlFor="marketing_id"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Marketing ID:
-                        </label>
-                        <input
-                            type="text"
-                            id="marketing_id"
-                            name="marketing_id"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter marketing ID"
-                        />
-                    </div>
+                    
                     <div>
                         <label
                             htmlFor="collector_profile_id"
@@ -106,38 +92,8 @@ const LoanCreate = ({ auth }) => {
                             placeholder="Enter loan term in months"
                         />
                     </div>
-                    <div>
-                        <label
-                            htmlFor="monthly_payment"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Monthly Payment:
-                        </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            id="monthly_payment"
-                            name="monthly_payment"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter monthly payment"
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="total_payable"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Total Payable:
-                        </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            id="total_payable"
-                            name="total_payable"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter total payable amount"
-                        />
-                    </div>
+                    
+                    
                     <div>
                         <label
                             htmlFor="release_date"
@@ -152,20 +108,7 @@ const LoanCreate = ({ auth }) => {
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
-                    <div>
-                        <label
-                            htmlFor="due_date"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Due Date:
-                        </label>
-                        <input
-                            type="date"
-                            id="due_date"
-                            name="due_date"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
-                    </div>
+                    
                     <div>
                         <label
                             htmlFor="status"

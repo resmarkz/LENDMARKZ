@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->string('marketing_id')->nullable()->unique();
             $table->foreignId('collector_profile_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('client_profile_id')->nullable()->constrained()->onDelete('cascade');
 
@@ -26,7 +25,6 @@ return new class extends Migration
             $table->date('release_date');                  // when loan was released
             $table->date('due_date');                      // final due date
             $table->enum('status', ['pending', 'active', 'paid', 'overdue', 'cancelled'])->default('pending');
-            // pending, active, paid, overdue, cancelled
             $table->timestamps();
 
             $table->index('status');

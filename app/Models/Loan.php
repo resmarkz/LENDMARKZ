@@ -9,18 +9,47 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Loan extends Model
 {
     protected $fillable = [
-        'marketing_id',
         'collector_profile_id',
         'client_profile_id',
         'principal_amount',
         'interest_rate',
-        'terms_months',
-        'monthly_payment',
-        'total_payable',
+        'term_months',
         'release_date',
-        'due_date',
         'status',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($loan) {
+            $loan->computeFields();
+        });
+
+        static::updating(function ($loan) {
+            $loan->computeFields();
+        });
+    }
+
+    public function computeFields()
+    {
+        $rate = $this->interest_rate / 100;
+
+        $monthlyRate = $rate / 12;
+        if ($monthlyRate > 0) {
+            $this->monthly_payment = $this->principal_amount *
+                ($monthlyRate * pow(1 + $monthlyRate, $this->term_months)) /
+                (pow(1 + $monthlyRate, $this->term_months) - 1);
+        } else {
+            $this->monthly_payment = $this->principal_amount / $this->term_months;
+        }
+
+        $this->monthly_payment = round($this->monthly_payment, 2);
+
+        $this->total_payable = round($this->monthly_payment * $this->term_months, 2);
+
+        if ($this->release_date) {
+            $this->due_date = \Carbon\Carbon::parse($this->release_date)->addMonths($this->term_months);
+        }
+    }
 
     public function clientProfile(): BelongsTo
     {

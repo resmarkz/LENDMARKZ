@@ -6,7 +6,7 @@ const LoanShow = ({ auth }) => {
     // Placeholder for loan data, in a real app this would come from props/backend
     const loan = {
         id: 1,
-        marketing_id: 'MKT001',
+        
         collector_profile_id: 1,
         client_profile_id: 1,
         principal_amount: 10000.00,
@@ -29,10 +29,7 @@ const LoanShow = ({ auth }) => {
                             <dt className="text-sm font-medium text-gray-500">ID</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{loan.id}</dd>
                         </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Marketing ID</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{loan.marketing_id}</dd>
-                        </div>
+                        
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">Collector Profile ID</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{loan.collector_profile_id}</dd>
