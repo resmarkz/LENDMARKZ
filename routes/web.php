@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\CollectorProfileController;
+use App\Http\Controllers\LoanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -56,9 +57,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', function () {
                 return Inertia::render('Admin/Loans/Index');
             })->name('index');
-            Route::get('/create', function () {
-                return Inertia::render('Admin/Loans/Create');
-            })->name('create');
+            Route::get('/create', [LoanController::class, 'create'])->name('create');
+            Route::post('/create', [LoanController::class, 'store'])->name('store');
             Route::get('/{id}', function () {
                 return Inertia::render('Admin/Loans/Show');
             })->name('show');

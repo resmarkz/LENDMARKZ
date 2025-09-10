@@ -17,17 +17,23 @@ return new class extends Migration
             $table->foreignId('collector_profile_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('client_profile_id')->nullable()->constrained()->onDelete('set null');
 
-            $table->decimal('amount_paid', 12, 2);         // actual amount paid
-            $table->date('payment_date');                  // when payment was made
-            $table->string('payment_method')->nullable();  // cash, bank transfer, gcash, etc.
-            $table->string('reference_no')->nullable();    // receipt no. or transaction id
+            $table->decimal('principal_amount', 12, 2);   // scheduled principal
+            $table->decimal('interest_amount', 12, 2);    // scheduled interest
+            $table->decimal('total_amount', 12, 2);       // scheduled total (principal + interest)
 
-            $table->string('status')->default('completed'); // completed, pending, failed, reversed
+            $table->decimal('amount_paid', 12, 2)->nullable(); // what client actually paid
+            $table->date('due_date');                           // when it’s due
+            $table->date('payment_date')->nullable();           // when actually paid
+
+            $table->string('payment_method')->nullable();
+            $table->string('reference_no')->nullable();
+            $table->boolean('is_paid')->default(false);
+
+            $table->string('status')->default('pending'); // pending, completed, failed, reversed
 
             $table->timestamps();
 
-            // Indexes for faster lookup
-            $table->index('payment_date');
+            $table->index('due_date');
             $table->index('status');
         });
     }

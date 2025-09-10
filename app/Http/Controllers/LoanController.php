@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoanController extends Controller
 {
@@ -20,15 +23,36 @@ class LoanController extends Controller
      */
     public function create()
     {
-        //
+        $clients = User::where('role', 'client')->get();
+        $collectors = User::where('role', 'collector')->get();
+
+        $userRole = Auth::user()->role;
+
+        return match ($userRole) {
+            'admin'  => Inertia::render('Admin/Loans/Create', [
+                'clients'    => $clients,
+                'collectors' => $collectors,
+            ]),
+            'client' => Inertia::render('Client/Loans/Create'),
+            default  => abort(403, 'Unauthorized action.'),
+        };
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'collector_profile_id' => 'required|exists:collector_profiles,id',
+            'client_profile_id',
+            'principal_amount',
+            'interest_rate',
+            'term_months',
+            'release_date',
+            'status',
+        ]);
     }
 
     /**

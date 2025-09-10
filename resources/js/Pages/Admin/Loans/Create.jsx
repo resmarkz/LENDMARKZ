@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 
-const LoanCreate = ({ auth }) => {
+const LoanCreate = ({ auth, ...props }) => {
+    const { clients, collectors } = props;
+
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
@@ -10,7 +12,6 @@ const LoanCreate = ({ auth }) => {
                     Create New Loan
                 </h1>
                 <form className="space-y-6">
-                    
                     <div>
                         <label
                             htmlFor="collector_profile_id"
@@ -23,9 +24,11 @@ const LoanCreate = ({ auth }) => {
                             name="collector_profile_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
-                            <option value="">Select Collector</option>
-                            <option value="1">Collector 1 (John Doe)</option>
-                            <option value="2">Collector 2 (Jane Smith)</option>
+                            {collectors.map((collector) => (
+                                <option key={collector.id} value={collector.id}>
+                                    {collector.first_name} {collector.last_name}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div>
@@ -40,9 +43,11 @@ const LoanCreate = ({ auth }) => {
                             name="client_profile_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
-                            <option value="">Select Client</option>
-                            <option value="1">Client 1 (Alice Brown)</option>
-                            <option value="2">Client 2 (Bob White)</option>
+                            {clients.map((client) => (
+                                <option key={client.id} value={client.id}>
+                                    {client.first_name} {client.last_name}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div>
@@ -92,8 +97,7 @@ const LoanCreate = ({ auth }) => {
                             placeholder="Enter loan term in months"
                         />
                     </div>
-                    
-                    
+
                     <div>
                         <label
                             htmlFor="release_date"
@@ -108,7 +112,7 @@ const LoanCreate = ({ auth }) => {
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
-                    
+
                     <div>
                         <label
                             htmlFor="status"
