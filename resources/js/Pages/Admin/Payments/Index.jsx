@@ -8,7 +8,13 @@ const PaymentIndex = ({ auth }) => {
             id: 1,
             loan_id: 1,
             collector_profile_id: 1,
+            collector_name: 'John Doe',
             client_profile_id: 1,
+            client_name: 'Alice Brown',
+            principal_amount: 1000.00,
+            interest_amount: 100.00,
+            total_amount: 1100.00,
+            due_date: '2024-01-31',
             amount_paid: 860.62,
             payment_date: '2024-02-01',
             payment_method: 'Gcash',
@@ -19,7 +25,13 @@ const PaymentIndex = ({ auth }) => {
             id: 2,
             loan_id: 2,
             collector_profile_id: 2,
+            collector_name: 'Jane Smith',
             client_profile_id: 2,
+            client_name: 'Bob White',
+            principal_amount: 1200.00,
+            interest_amount: 120.00,
+            total_amount: 1320.00,
+            due_date: '2024-02-28',
             amount_paid: 886.41,
             payment_date: '2024-03-01',
             payment_method: 'Bank Transfer',
@@ -102,8 +114,12 @@ const PaymentIndex = ({ auth }) => {
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loan ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collector ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client ID</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collector Name</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client Name</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal Amount</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest Amount</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Paid</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
@@ -117,8 +133,12 @@ const PaymentIndex = ({ auth }) => {
                                 <tr key={payment.id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{payment.id}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.loan_id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.collector_profile_id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.client_profile_id}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.collector_name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.client_name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.principal_amount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.interest_amount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.total_amount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.due_date}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.amount_paid}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.payment_date}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.payment_method}</td>

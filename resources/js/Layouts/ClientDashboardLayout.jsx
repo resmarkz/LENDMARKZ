@@ -36,7 +36,7 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: '/client/dashboard',
+                    href: "/client/dashboard",
                 },
             ],
         },
@@ -46,19 +46,24 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "My Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: '/client/loans',
+                    href: "/client/loans",
                 },
                 {
                     name: "Apply for Loan",
                     icon: "fas fa-file-invoice-dollar",
-                    href: '/client/loans/create-loan',
+                    href: "/client/loans/create-loan",
+                },
+                {
+                    name: "My Payments",
+                    icon: "fas fa-receipt",
+                    href: "/client/payments/1", // Assuming loan ID 1 for sample data
                 },
             ],
         },
     ];
 
     const isActiveLink = (href) => {
-        return url.startsWith(href);
+        return url === href;
     };
 
     return (
@@ -107,9 +112,7 @@ function ClientDashboardLayout({ children }) {
                                             }`}
                                         >
                                             <i
-                                                className={`${
-                                                    link.icon
-                                                } mr-3 ${
+                                                className={`${link.icon} mr-3 ${
                                                     isActiveLink(link.href)
                                                         ? "text-indigo-500"
                                                         : "text-gray-400"
@@ -155,10 +158,11 @@ function ClientDashboardLayout({ children }) {
                             >
                                 <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <span className="text-indigo-600 font-medium">
-                                        {user?.name
-                                            .split(" ")
-                                            .map((n) => n[0])
-                                            .join("")
+                                        {user?.first_name
+                                            .charAt(0)
+                                            .toUpperCase()}{" "}
+                                        {user?.last_name
+                                            .charAt(0)
                                             .toUpperCase()}
                                     </span>
                                 </div>

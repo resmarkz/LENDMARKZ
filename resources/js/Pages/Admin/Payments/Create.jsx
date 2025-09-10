@@ -43,6 +43,48 @@ const PaymentCreate = ({ auth }) => {
                         </select>
                     </div>
                     <div>
+                        <label htmlFor="principal_amount" className="block text-sm font-medium text-gray-700 mb-1">Principal Amount:</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="principal_amount"
+                            name="principal_amount"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Enter principal amount"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="interest_amount" className="block text-sm font-medium text-gray-700 mb-1">Interest Amount:</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="interest_amount"
+                            name="interest_amount"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Enter interest amount"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="total_amount" className="block text-sm font-medium text-gray-700 mb-1">Total Amount:</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="total_amount"
+                            name="total_amount"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Enter total amount"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">Due Date:</label>
+                        <input
+                            type="date"
+                            id="due_date"
+                            name="due_date"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
+                    <div>
                         <label htmlFor="amount_paid" className="block text-sm font-medium text-gray-700 mb-1">Amount Paid:</label>
                         <input
                             type="number"
