@@ -46,10 +46,10 @@ class LoanController extends Controller
     {
         $validatedData = $request->validate([
             'collector_profile_id' => 'required|exists:collector_profiles,id',
-            'client_profile_id',
-            'principal_amount',
-            'interest_rate',
-            'term_months',
+            'client_profile_id'    => 'required|exists:client_profiles,id',
+            'principal_amount'    => 'required|numeric|min:0',
+            'interest_rate'      => 'required|numeric|min:0',
+            'term_months'      => 'required|integer|min:1',
             'release_date',
             'status',
         ]);

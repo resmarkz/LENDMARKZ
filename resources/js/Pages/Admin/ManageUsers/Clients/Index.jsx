@@ -93,23 +93,17 @@ const ClientIndex = ({ auth, clients }) => {
                                         {client.email}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {client.client_profile[0]?.address}
+                                        {client.client_profile?.address}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.client_profile?.contact_number}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {client.client_profile?.date_of_birth}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {
-                                            client.client_profile[0]
-                                                ?.contact_number
-                                        }
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {
-                                            client.client_profile[0]
-                                                ?.date_of_birth
-                                        }
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {
-                                            client.client_profile[0]
+                                            client.client_profile
                                                 ?.source_of_income
                                         }
                                     </td>

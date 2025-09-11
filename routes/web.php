@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\CollectorProfileController;
+use App\Http\Controllers\ContactReferenceController;
 use App\Http\Controllers\LoanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -125,6 +126,12 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{client}/edit', [ClientProfileController::class, 'edit'])->name('edit');
                 Route::put('/{client}/edit', [ClientProfileController::class, 'update'])->name('update');
                 Route::delete('/{client}/delete', [ClientProfileController::class, 'destroy'])->name('destroy');
+
+                Route::get('/{client}/contact-references/create', [ContactReferenceController::class, 'create'])->name('contact-references.create');
+                Route::post('/{client}/contact-references/create', [ContactReferenceController::class, 'store'])->name('contact-references.store');
+                Route::get('/{client}/contact-references/{contactReference}/edit', [ContactReferenceController::class, 'edit'])->name('contact-references.edit');
+                Route::put('/{client}/contact-references/{contactReference}', [ContactReferenceController::class, 'update'])->name('contact-references.update');
+                Route::delete('/{client}/contact-references/{contactReference}', [ContactReferenceController::class, 'destroy'])->name('contact-references.destroy');
             });
 
             Route::prefix('collectors')->name('collectors.')->group(function () {

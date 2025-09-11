@@ -74,7 +74,7 @@ class ClientProfileController extends Controller
      */
     public function show(User $client)
     {
-        $client->load('clientProfile');
+        $client->load('clientProfile.contactReferences');
         if (!$client) {
             return redirect()->back()->withErrors(['error' => 'Client not found.']);
         }
@@ -88,7 +88,7 @@ class ClientProfileController extends Controller
      */
     public function edit(User $client)
     {
-        $client->load('clientProfile');
+        $client->load('clientProfile.contactReferences');
         if (!$client) {
             return redirect()->back()->withErrors(['error' => 'Client not found.']);
         }
