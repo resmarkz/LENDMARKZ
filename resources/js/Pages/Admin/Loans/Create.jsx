@@ -1,9 +1,27 @@
-import React from "react";
-import { Link } from "@inertiajs/react";
+import React, { useEffect } from "react";
+import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import errorHandler from "@/utils/errorHandler";
 
 const LoanCreate = ({ auth, ...props }) => {
     const { clients, collectors } = props;
+    const { data, setData, post, processing, errors } = useForm({
+        collector_profile_id: "",
+        client_profile_id: "",
+        principal_amount: "",
+        interest_rate: "",
+        term_months: "",
+        status: "",
+    });
+
+    useEffect(() => {
+        errorHandler(errors);
+    }, [errors]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(`/admin/loans/create`);
+    };
 
     return (
         <AdminDashboardLayout auth={auth}>
@@ -11,10 +29,10 @@ const LoanCreate = ({ auth, ...props }) => {
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">
                     Create New Loan
                 </h1>
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label
-                            htmlFor="collector_profile_id"
+                            htmlFor="collector_id"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
                             Collector:
@@ -23,7 +41,12 @@ const LoanCreate = ({ auth, ...props }) => {
                             id="collector_profile_id"
                             name="collector_profile_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={data.collector_profile_id}
+                            onChange={(e) =>
+                                setData("collector_profile_id", e.target.value)
+                            }
                         >
+                            <option value="">-- Select Collector --</option>
                             {collectors.map((collector) => (
                                 <option key={collector.id} value={collector.id}>
                                     {collector.first_name} {collector.last_name}
@@ -42,7 +65,12 @@ const LoanCreate = ({ auth, ...props }) => {
                             id="client_profile_id"
                             name="client_profile_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={data.client_profile_id}
+                            onChange={(e) =>
+                                setData("client_profile_id", e.target.value)
+                            }
                         >
+                            <option value="">-- Select Collector --</option>
                             {clients.map((client) => (
                                 <option key={client.id} value={client.id}>
                                     {client.first_name} {client.last_name}
@@ -64,6 +92,10 @@ const LoanCreate = ({ auth, ...props }) => {
                             name="principal_amount"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             placeholder="Enter principal amount"
+                            value={data.principal_amount}
+                            onChange={(e) =>
+                                setData("principal_amount", e.target.value)
+                            }
                         />
                     </div>
                     <div>
@@ -73,14 +105,24 @@ const LoanCreate = ({ auth, ...props }) => {
                         >
                             Interest Rate (%):
                         </label>
-                        <input
-                            type="number"
-                            step="0.01"
+                        <select
                             id="interest_rate"
                             name="interest_rate"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter interest rate"
-                        />
+                            value={data.interest_rate}
+                            onChange={(e) =>
+                                setData("interest_rate", e.target.value)
+                            }
+                        >
+                            <option value="">-- Select Interest Rate --</option>
+                            <option value="12">12%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                            <option value="35">35%</option>
+                            <option value="40">40%</option>
+                        </select>
                     </div>
                     <div>
                         <label
@@ -89,28 +131,23 @@ const LoanCreate = ({ auth, ...props }) => {
                         >
                             Term (Months):
                         </label>
-                        <input
-                            type="number"
+                        <select
                             id="term_months"
                             name="term_months"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter loan term in months"
-                        />
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="release_date"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            value={data.term_months}
+                            onChange={(e) =>
+                                setData("term_months", e.target.value)
+                            }
                         >
-                            Release Date:
-                        </label>
-                        <input
-                            type="date"
-                            id="release_date"
-                            name="release_date"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
+                            <option value="">-- Select Term --</option>
+                            <option value="6">6 months</option>
+                            <option value="12">12 months</option>
+                            <option value="18">18 months</option>
+                            <option value="24">24 months</option>
+                            <option value="36">36 months</option>
+                            <option value="48">48 months</option>
+                        </select>
                     </div>
 
                     <div>
@@ -124,7 +161,10 @@ const LoanCreate = ({ auth, ...props }) => {
                             id="status"
                             name="status"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value={data.status}
+                            onChange={(e) => setData("status", e.target.value)}
                         >
+                            <option value="">-- Select Status --</option>
                             <option value="pending">Pending</option>
                             <option value="active">Active</option>
                             <option value="paid">Paid</option>

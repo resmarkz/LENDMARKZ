@@ -14,7 +14,6 @@ const LoanEdit = ({ auth }) => {
         term_months: 12,
         monthly_payment: 860.62,
         total_payable: 10327.44,
-        release_date: '2024-01-01',
         due_date: '2025-01-01',
         status: 'active',
     };
@@ -103,16 +102,6 @@ const LoanEdit = ({ auth }) => {
                             id="total_payable"
                             name="total_payable"
                             defaultValue={loan.total_payable}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="release_date" className="block text-sm font-medium text-gray-700 mb-1">Release Date:</label>
-                        <input
-                            type="date"
-                            id="release_date"
-                            name="release_date"
-                            defaultValue={loan.release_date}
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>

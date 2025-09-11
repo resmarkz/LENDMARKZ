@@ -44,16 +44,32 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'collector_profile_id' => 'required|exists:collector_profiles,id',
-            'client_profile_id'    => 'required|exists:client_profiles,id',
-            'principal_amount'    => 'required|numeric|min:0',
-            'interest_rate'      => 'required|numeric|min:0',
-            'term_months'      => 'required|integer|min:1',
-            'release_date',
-            'status',
-        ]);
+        $userRole = Auth::user()->role;
+
+        match ($userRole) {
+            'admin'  => $this->handleAdminStore($request),
+            'client' => $this->handleClientStore($request),
+            default  => abort(403, 'Unauthorized action.'),
+        };
     }
+
+    private function handleAdminStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'collector_profile_id' => 'required|exists:users,id',
+            'client_profile_id' => 'required|exists:users,id',
+            'principal_amount' => 'required|numeric|min:0',
+            'interest_rate' => 'required|numeric|min:0',
+            'term_months' => 'required|integer|min:1',
+            'status' => 'required|in:pending,active',
+        ]);
+
+        dd($validatedData);
+
+        return redirect()->intended('/admin/loans')->with('success', 'Loan created successfully.');
+    }
+
+    private function handleClientStore(Request $request) {}
 
     /**
      * Display the specified resource.

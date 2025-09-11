@@ -57,20 +57,6 @@ const ClientCreateLoan = () => {
                             placeholder="Enter desired loan term in months"
                         />
                     </div>
-                    <div>
-                        <label
-                            htmlFor="release_date"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Preferred Release Date:
-                        </label>
-                        <input
-                            type="date"
-                            id="release_date"
-                            name="release_date"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
-                    </div>
                     {/* Status will be defaulted to 'pending' by backend */}
                     <div className="flex items-center justify-end gap-4 mt-6">
                         <button
