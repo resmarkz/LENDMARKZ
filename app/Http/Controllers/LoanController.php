@@ -15,7 +15,10 @@ class LoanController extends Controller
      */
     public function index()
     {
-        //
+        $loans = Loan::with(['clientProfile.user', 'collectorProfile.user'])->get();
+        return Inertia::render('Admin/Loans/Index', [
+            'loans' => $loans,
+        ]);
     }
 
     /**
@@ -46,7 +49,7 @@ class LoanController extends Controller
     {
         $userRole = Auth::user()->role;
 
-        match ($userRole) {
+        return match ($userRole) {
             'admin'  => $this->handleAdminStore($request),
             'client' => $this->handleClientStore($request),
             default  => abort(403, 'Unauthorized action.'),
@@ -56,18 +59,34 @@ class LoanController extends Controller
     private function handleAdminStore(Request $request)
     {
         $validatedData = $request->validate([
-            'collector_profile_id' => 'required|exists:users,id',
-            'client_profile_id' => 'required|exists:users,id',
+            'collector_id'     => 'required|exists:users,id',
+            'client_id'        => 'required|exists:users,id',
             'principal_amount' => 'required|numeric|min:0',
-            'interest_rate' => 'required|numeric|min:0',
-            'term_months' => 'required|integer|min:1',
-            'status' => 'required|in:pending,active',
+            'interest_rate'    => 'required|numeric|min:0',
+            'term_months'      => 'required|integer|min:1',
+            'status'           => 'required|in:pending,active',
         ]);
 
-        dd($validatedData);
+        $client    = User::find($validatedData['client_id']);
+        $collector = User::find($validatedData['collector_id']);
 
-        return redirect()->intended('/admin/loans')->with('success', 'Loan created successfully.');
+        $loan = Loan::create([
+            'collector_profile_id' => $collector->collectorProfile->id,
+            'client_profile_id'    => $client->clientProfile->id,
+            'principal_amount'     => $validatedData['principal_amount'],
+            'interest_rate'        => $validatedData['interest_rate'],
+            'term_months'          => $validatedData['term_months'],
+            'status'               => $validatedData['status'],
+        ]);
+
+        if (! $loan) {
+            return back()->withErrors(['error' => 'Failed to create loan. Please try again.'])->withInput();
+        }
+
+        return redirect()->route('admin.loans.index')
+            ->with('success', 'Loan created successfully.');
     }
+
 
     private function handleClientStore(Request $request) {}
 

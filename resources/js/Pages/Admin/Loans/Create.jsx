@@ -6,8 +6,8 @@ import errorHandler from "@/utils/errorHandler";
 const LoanCreate = ({ auth, ...props }) => {
     const { clients, collectors } = props;
     const { data, setData, post, processing, errors } = useForm({
-        collector_profile_id: "",
-        client_profile_id: "",
+        collector_id: "",
+        client_id: "",
         principal_amount: "",
         interest_rate: "",
         term_months: "",
@@ -20,7 +20,14 @@ const LoanCreate = ({ auth, ...props }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(`/admin/loans/create`);
+        post(`/admin/loans/create`, {
+            onSuccess: () => {
+                console.log('Loan creation successful! Redirecting...');
+            },
+            onError: (errors) => {
+                console.error('Loan creation failed:', errors);
+            },
+        });
     };
 
     return (
@@ -38,12 +45,12 @@ const LoanCreate = ({ auth, ...props }) => {
                             Collector:
                         </label>
                         <select
-                            id="collector_profile_id"
-                            name="collector_profile_id"
+                            id="collector_id"
+                            name="collector_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={data.collector_profile_id}
+                            value={data.collector_id}
                             onChange={(e) =>
-                                setData("collector_profile_id", e.target.value)
+                                setData("collector_id", e.target.value)
                             }
                         >
                             <option value="">-- Select Collector --</option>
@@ -56,18 +63,18 @@ const LoanCreate = ({ auth, ...props }) => {
                     </div>
                     <div>
                         <label
-                            htmlFor="client_profile_id"
+                            htmlFor="client_id"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
                             Client:
                         </label>
                         <select
-                            id="client_profile_id"
-                            name="client_profile_id"
+                            id="client_id"
+                            name="client_id"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            value={data.client_profile_id}
+                            value={data.client_id}
                             onChange={(e) =>
-                                setData("client_profile_id", e.target.value)
+                                setData("client_id", e.target.value)
                             }
                         >
                             <option value="">-- Select Collector --</option>

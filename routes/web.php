@@ -73,9 +73,7 @@ Route::middleware('auth')->group(function () {
         })->name('dashboard');
 
         Route::prefix('loans')->name('loans.')->group(function () {
-            Route::get('/', function () {
-                return Inertia::render('Admin/Loans/Index');
-            })->name('index');
+            Route::get('/', [LoanController::class, 'index'])->name('index');
             Route::get('/create', [LoanController::class, 'create'])->name('create');
             Route::post('/create', [LoanController::class, 'store'])->name('store');
             Route::get('/{id}', function () {

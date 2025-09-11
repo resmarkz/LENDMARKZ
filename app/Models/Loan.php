@@ -26,10 +26,13 @@ class Loan extends Model
     protected static function booted()
     {
         static::creating(function ($loan) {
+            $loan->computeFields();
             if ($loan->status === 'active' && !$loan->release_date) {
                 $loan->release_date = now()->toDateString();
             }
-            $loan->computeFields();
+            if (! $loan->remaining_balance) {
+                $loan->remaining_balance = $loan->total_payable;
+            }
         });
 
         static::updating(function ($loan) {
