@@ -48,7 +48,7 @@ const CollectorShow = ({ auth, collector }) => {
                                 Contact Number
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {collector.collector_profile[0].contact_number}
+                                {collector.collector_profile?.contact_number}
                             </dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -56,7 +56,7 @@ const CollectorShow = ({ auth, collector }) => {
                                 Date of Birth
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {collector.collector_profile[0].date_of_birth}
+                                {collector.collector_profile?.date_of_birth}
                             </dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -64,7 +64,7 @@ const CollectorShow = ({ auth, collector }) => {
                                 Status
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {collector.collector_profile[0].status}
+                                {collector.collector_profile?.status}
                             </dd>
                         </div>
                     </dl>

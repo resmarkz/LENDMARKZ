@@ -10,9 +10,9 @@ const CollectorEdit = ({ auth, collector }) => {
         email: collector.email,
         current_password: "",
         password: "",
-        contact_number: collector.collector_profile[0].contact_number,
-        date_of_birth: collector.collector_profile[0].date_of_birth,
-        status: collector.collector_profile[0].status,
+        contact_number: collector.collector_profile?.contact_number,
+        date_of_birth: collector.collector_profile?.date_of_birth,
+        status: collector.collector_profile?.status,
     });
 
     useEffect(() => {
@@ -134,7 +134,7 @@ const CollectorEdit = ({ auth, collector }) => {
                             id="contact_number"
                             name="contact_number"
                             defaultValue={
-                                collector.collector_profile[0].contact_number
+                                collector.collector_profile?.contact_number
                             }
                             onChange={(e) =>
                                 setData("contact_number", e.target.value)
@@ -154,7 +154,7 @@ const CollectorEdit = ({ auth, collector }) => {
                             id="date_of_birth"
                             name="date_of_birth"
                             defaultValue={
-                                collector.collector_profile[0].date_of_birth
+                                collector.collector_profile?.date_of_birth
                             }
                             onChange={(e) =>
                                 setData("date_of_birth", e.target.value)
@@ -172,7 +172,7 @@ const CollectorEdit = ({ auth, collector }) => {
                         <select
                             id="status"
                             name="status"
-                            defaultValue={collector.collector_profile[0].status}
+                            defaultValue={collector.collector_profile?.status}
                             onChange={(e) => setData("status", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >

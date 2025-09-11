@@ -88,18 +88,18 @@ const CollectorIndex = ({ auth, collectors }) => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {
-                                            collector.collector_profile[0]
+                                            collector.collector_profile
                                                 .contact_number
                                         }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {
-                                            collector.collector_profile[0]
+                                            collector.collector_profile
                                                 .date_of_birth
                                         }
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {collector.collector_profile[0].status}
+                                        {collector.collector_profile.status}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                         <Link
