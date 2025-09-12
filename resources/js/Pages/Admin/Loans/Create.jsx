@@ -3,8 +3,8 @@ import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import errorHandler from "@/utils/errorHandler";
 
-const LoanCreate = ({ auth, ...props }) => {
-    const { clients, collectors } = props;
+const LoanCreate = ({ ...props }) => {
+    const { auth, clients, collectors } = props;
     const { data, setData, post, processing, errors } = useForm({
         collector_id: "",
         client_id: "",
@@ -22,10 +22,10 @@ const LoanCreate = ({ auth, ...props }) => {
         e.preventDefault();
         post(`/admin/loans/create`, {
             onSuccess: () => {
-                console.log('Loan creation successful! Redirecting...');
+                console.log("Loan creation successful! Redirecting...");
             },
             onError: (errors) => {
-                console.error('Loan creation failed:', errors);
+                console.error("Loan creation failed:", errors);
             },
         });
     };
@@ -122,13 +122,13 @@ const LoanCreate = ({ auth, ...props }) => {
                             }
                         >
                             <option value="">-- Select Interest Rate --</option>
-                            <option value="12">12%</option>
-                            <option value="15">15%</option>
-                            <option value="20">20%</option>
-                            <option value="25">25%</option>
-                            <option value="30">30%</option>
-                            <option value="35">35%</option>
-                            <option value="40">40%</option>
+                            <option value="12.00">12%</option>
+                            <option value="15.00">15%</option>
+                            <option value="20.00">20%</option>
+                            <option value="25.00">25%</option>
+                            <option value="30.00">30%</option>
+                            <option value="35.00">35%</option>
+                            <option value="40.00">40%</option>
                         </select>
                     </div>
                     <div>
@@ -183,6 +183,7 @@ const LoanCreate = ({ auth, ...props }) => {
                         <button
                             type="submit"
                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={processing}
                         >
                             Save Loan
                         </button>

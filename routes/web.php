@@ -76,12 +76,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [LoanController::class, 'index'])->name('index');
             Route::get('/create', [LoanController::class, 'create'])->name('create');
             Route::post('/create', [LoanController::class, 'store'])->name('store');
-            Route::get('/{id}', function () {
-                return Inertia::render('Admin/Loans/Show');
-            })->name('show');
-            Route::get('/{id}/edit', function () {
-                return Inertia::render('Admin/Loans/Edit');
-            })->name('edit');
+            Route::get('/{loan}', [LoanController::class, 'show'])->name('show');
+            Route::get('/{loan}/edit', [LoanController::class, 'edit'])->name('edit');
+            Route::put('/{loan}/edit', [LoanController::class, 'update'])->name('update');
+            Route::delete('/{loan}/delete', [LoanController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('payments')->name('payments.')->group(function () {

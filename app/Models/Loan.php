@@ -16,6 +16,11 @@ class Loan extends Model
         'term_months',
         'release_date',
         'status',
+
+        'monthly_payment',
+        'total_payable',
+        'due_date',
+        'remaining_balance',
     ];
 
     protected $casts = [
@@ -26,7 +31,6 @@ class Loan extends Model
     protected static function booted()
     {
         static::creating(function ($loan) {
-            $loan->computeFields();
             if ($loan->status === 'active' && !$loan->release_date) {
                 $loan->release_date = now()->toDateString();
             }
@@ -39,36 +43,16 @@ class Loan extends Model
             if ($loan->isDirty('status') && $loan->status === 'active' && !$loan->release_date) {
                 $loan->release_date = now()->toDateString();
             }
-            $loan->computeFields();
         });
 
         // After save → generate amortization schedule
         static::saved(function ($loan) {
             if ($loan->wasChanged('status') && $loan->status === 'active') {
                 $loan->generateAmortizationSchedule();
+                $loan->remaining_balance = $loan->total_payable;
+                $loan->saveQuietly(); // avoid recursion
             }
         });
-    }
-
-    public function computeFields()
-    {
-        $rate = $this->interest_rate / 100;
-        $monthlyRate = $rate / 12;
-
-        if ($monthlyRate > 0) {
-            $this->monthly_payment = $this->principal_amount *
-                ($monthlyRate * pow(1 + $monthlyRate, $this->term_months)) /
-                (pow(1 + $monthlyRate, $this->term_months) - 1);
-        } else {
-            $this->monthly_payment = $this->principal_amount / $this->term_months;
-        }
-
-        $this->monthly_payment = round($this->monthly_payment, 2);
-        $this->total_payable = round($this->monthly_payment * $this->term_months, 2);
-
-        if ($this->release_date) {
-            $this->due_date = $this->release_date->copy()->addMonths($this->term_months);
-        }
     }
 
     /**

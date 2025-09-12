@@ -1,15 +1,9 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import formatCurrency from "@/utils/formatCurrency";
 
 const LoanIndex = ({ auth, loans }) => {
-    const formatCurrency = (value) => {
-        return `₱${Number(value).toLocaleString("en-PH", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })}`;
-    };
-
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
@@ -136,9 +130,14 @@ const LoanIndex = ({ auth, loans }) => {
                                             >
                                                 Edit
                                             </Link>
-                                            <button className="text-red-600 hover:text-red-900">
+                                            <Link
+                                                href={`/admin/loans/${loan.id}/delete`}
+                                                className="text-red-600 hover:text-red-900"
+                                                as="button"
+                                                method="DELETE"
+                                            >
                                                 Delete
-                                            </button>
+                                            </Link>
                                         </td>
                                     </tr>
                                 ))
