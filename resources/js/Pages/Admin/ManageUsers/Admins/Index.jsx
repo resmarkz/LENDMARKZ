@@ -86,7 +86,7 @@ const AdminIndex = ({ auth, admins }) => {
                                                 href={`/admin/manage-users/admins/${admin.id}/delete`}
                                                 className="text-red-600 hover:text-red-900"
                                                 as="button"
-                                                method="DELETE"
+                                                method="POST"
                                             >
                                                 Delete
                                             </Link>

@@ -4,7 +4,7 @@ import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import errorHandler from "@/Utils/errorHandler";
 
 const AdminEdit = ({ auth, admin }) => {
-    const { data, setData, processing, errors, put } = useForm({
+    const { data, setData, processing, errors, post } = useForm({
         first_name: admin.first_name,
         last_name: admin.last_name,
         email: admin.email,
@@ -18,7 +18,7 @@ const AdminEdit = ({ auth, admin }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(`/admin/manage-users/admins/${admin.id}/edit`);
+        post(`/admin/manage-users/admins/${admin.id}/edit`);
     };
 
     return (

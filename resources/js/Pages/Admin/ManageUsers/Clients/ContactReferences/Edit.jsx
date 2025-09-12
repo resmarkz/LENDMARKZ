@@ -4,7 +4,7 @@ import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import errorHandler from "@/Utils/errorHandler";
 
 const ContactReferenceEdit = ({ auth, client, contactReference }) => {
-    const { data, setData, processing, errors, put } = useForm({
+    const { data, setData, processing, errors, post } = useForm({
         first_name: contactReference.first_name || "",
         last_name: contactReference.last_name || "",
         relationship: contactReference.relationship || "",
@@ -17,7 +17,7 @@ const ContactReferenceEdit = ({ auth, client, contactReference }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(
+        post(
             `/admin/manage-users/clients/${client.id}/contact-references/${contactReference.id}`
         );
     };

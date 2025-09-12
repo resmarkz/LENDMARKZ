@@ -6,7 +6,7 @@ import errorHandler from "@/utils/errorHandler";
 const LoanEdit = ({ ...props }) => {
     const { auth, collectors, clients, loan } = props;
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         collector_id: loan.collector_id,
         client_id: loan.client_id,
         principal_amount: loan.principal_amount,
@@ -21,7 +21,7 @@ const LoanEdit = ({ ...props }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(`/admin/loans/${loan.id}/edit`);
+        post(`/admin/loans/${loan.id}/edit`);
     };
 
     return (

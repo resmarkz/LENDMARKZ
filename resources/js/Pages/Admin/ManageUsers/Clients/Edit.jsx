@@ -264,7 +264,7 @@ const ClientEdit = ({ auth, client }) => {
                                                             href={`/admin/manage-users/clients/${client.id}/contact-references/${reference.id}`}
                                                             className="text-red-600 hover:text-red-900"
                                                             as="button"
-                                                            method="DELETE"
+                                                            method="POST"
                                                         >
                                                             Delete
                                                         </Link>

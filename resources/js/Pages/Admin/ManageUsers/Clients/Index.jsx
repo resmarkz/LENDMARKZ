@@ -124,7 +124,7 @@ const ClientIndex = ({ auth, clients }) => {
                                             href={`/admin/manage-users/clients/${client.id}/delete`}
                                             className="text-red-600 hover:text-red-900"
                                             as="button"
-                                            method="DELETE"
+                                            method="POST"
                                         >
                                             Delete
                                         </Link>

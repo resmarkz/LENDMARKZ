@@ -4,7 +4,7 @@ import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import errorHandler from "@/Utils/errorHandler";
 
 const CollectorEdit = ({ auth, collector }) => {
-    const { data, setData, processing, errors, put } = useForm({
+    const { data, setData, processing, errors, post } = useForm({
         first_name: collector.first_name,
         last_name: collector.last_name,
         email: collector.email,
@@ -21,7 +21,7 @@ const CollectorEdit = ({ auth, collector }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(`/admin/manage-users/collectors/${collector.id}/edit`);
+        post(`/admin/manage-users/collectors/${collector.id}/edit`);
     };
 
     return (
