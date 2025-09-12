@@ -36,7 +36,7 @@ function CollectorDashboardLayout({ children }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: '/collector/dashboard',
+                    href: "/collector/dashboard",
                 },
             ],
         },
@@ -46,12 +46,12 @@ function CollectorDashboardLayout({ children }) {
                 {
                     name: "My Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: '/collector/loans',
+                    href: "/collector/loans",
                 },
                 {
                     name: "Record Payment",
                     icon: "fas fa-money-bill-wave",
-                    href: '/collector/payments/create', // Assuming a generic payment creation for any loan
+                    href: "/collector/payments/create", // Assuming a generic payment creation for any loan
                 },
             ],
         },
@@ -107,9 +107,7 @@ function CollectorDashboardLayout({ children }) {
                                             }`}
                                         >
                                             <i
-                                                className={`${
-                                                    link.icon
-                                                } mr-3 ${
+                                                className={`${link.icon} mr-3 ${
                                                     isActiveLink(link.href)
                                                         ? "text-indigo-500"
                                                         : "text-gray-400"
@@ -155,10 +153,11 @@ function CollectorDashboardLayout({ children }) {
                             >
                                 <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <span className="text-indigo-600 font-medium">
-                                        {user?.name
-                                            .split(" ")
-                                            .map((n) => n[0])
-                                            .join("")
+                                        {user?.first_name
+                                            .charAt(0)
+                                            .toUpperCase()}{" "}
+                                        {user?.last_name
+                                            .charAt(0)
                                             .toUpperCase()}
                                     </span>
                                 </div>
