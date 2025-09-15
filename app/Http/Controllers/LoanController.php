@@ -10,11 +10,60 @@ use Inertia\Inertia;
 
 class LoanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $loans = Loan::with(['clientProfile.user', 'collectorProfile.user'])->get();
+        $loans = Loan::with(['clientProfile.user', 'collectorProfile.user'])
+            ->when($request->input('search'), function ($query, $search) {
+                $query->whereHas('clientProfile.user', function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->input('status'), function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->when($request->input('collector_id'), function ($query, $collector_id) {
+                $query->whereHas('collectorProfile', function ($q) use ($collector_id) {
+                    $q->where('user_id', $collector_id);
+                });
+            })
+            ->when($request->input('start_date'), function ($query, $start_date) {
+                $query->whereDate('release_date', '>=', $start_date);
+            })
+            ->when($request->input('end_date'), function ($query, $end_date) {
+                $query->whereDate('release_date', '<=', $end_date);
+            })
+            ->when($request->input('min_principal'), function ($query, $min_principal) {
+                $query->where('principal_amount', '>=', $min_principal);
+            })
+            ->when($request->input('max_principal'), function ($query, $max_principal) {
+                $query->where('principal_amount', '<=', $max_principal);
+            })
+            ->when($request->input('min_interest'), function ($query, $min_interest) {
+                $query->where('interest_rate', '>=', $min_interest);
+            })
+            ->when($request->input('max_interest'), function ($query, $max_interest) {
+                $query->where('interest_rate', '<=', $max_interest);
+            })
+            ->paginate(10)
+            ->withQueryString();
+
+        $collectors = User::where('role', 'collector')->get();
+
         return Inertia::render('Admin/Loans/Index', [
             'loans' => $loans,
+            'filters' => $request->all([
+                'search',
+                'status',
+                'collector_id',
+                'start_date',
+                'end_date',
+                'min_principal',
+                'max_principal',
+                'min_interest',
+                'max_interest'
+            ]),
+            'collectors' => $collectors,
         ]);
     }
 
