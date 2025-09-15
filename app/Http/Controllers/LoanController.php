@@ -19,32 +19,16 @@ class LoanController extends Controller
                         ->orWhere('last_name', 'like', "%{$search}%");
                 });
             })
-            ->when($request->input('status'), function ($query, $status) {
-                $query->where('status', $status);
-            })
+            ->when($request->input('status'), fn($query, $status) => $query->where('status', $status))
             ->when($request->input('collector_id'), function ($query, $collector_id) {
-                $query->whereHas('collectorProfile', function ($q) use ($collector_id) {
-                    $q->where('user_id', $collector_id);
-                });
+                $query->whereHas('collectorProfile', fn($q) => $q->where('user_id', $collector_id));
             })
-            ->when($request->input('start_date'), function ($query, $start_date) {
-                $query->whereDate('release_date', '>=', $start_date);
-            })
-            ->when($request->input('end_date'), function ($query, $end_date) {
-                $query->whereDate('release_date', '<=', $end_date);
-            })
-            ->when($request->input('min_principal'), function ($query, $min_principal) {
-                $query->where('principal_amount', '>=', $min_principal);
-            })
-            ->when($request->input('max_principal'), function ($query, $max_principal) {
-                $query->where('principal_amount', '<=', $max_principal);
-            })
-            ->when($request->input('min_interest'), function ($query, $min_interest) {
-                $query->where('interest_rate', '>=', $min_interest);
-            })
-            ->when($request->input('max_interest'), function ($query, $max_interest) {
-                $query->where('interest_rate', '<=', $max_interest);
-            })
+            ->when($request->input('start_date'), fn($query, $start_date) => $query->whereDate('release_date', '>=', $start_date))
+            ->when($request->input('end_date'), fn($query, $end_date) => $query->whereDate('release_date', '<=', $end_date))
+            ->when($request->input('min_principal'), fn($query, $min_principal) => $query->where('principal_amount', '>=', $min_principal))
+            ->when($request->input('max_principal'), fn($query, $max_principal) => $query->where('principal_amount', '<=', $max_principal))
+            ->when($request->input('min_interest'), fn($query, $min_interest) => $query->where('interest_rate', '>=', $min_interest))
+            ->when($request->input('max_interest'), fn($query, $max_interest) => $query->where('interest_rate', '<=', $max_interest))
             ->paginate(10)
             ->withQueryString();
 
@@ -124,7 +108,15 @@ class LoanController extends Controller
             'monthly_payment'      => $computed['monthly_payment'],
             'total_payable'        => $computed['total_payable'],
             'remaining_balance'    => $computed['total_payable'],
+            'release_date'         => $validatedData['status'] === 'active' ? now() : null,
+            'due_date'             => $validatedData['status'] === 'active'
+                ? now()->copy()->addMonths($validatedData['term_months'])
+                : null,
         ]);
+
+        if ($loan->status === 'active') {
+            $loan->generateAmortizationSchedule();
+        }
 
         return redirect()->route('admin.loans.index')
             ->with('success', 'Loan created successfully.');
@@ -201,6 +193,11 @@ class LoanController extends Controller
             $validatedData['term_months']
         );
 
+        $releaseDate = $loan->release_date ?? ($validatedData['status'] === 'active' ? now() : null);
+        $dueDate = $validatedData['status'] === 'active'
+            ? ($releaseDate->copy()->addMonths($validatedData['term_months']))
+            : $loan->due_date;
+
         $loan->update([
             'collector_profile_id' => $collector->collectorProfile->id,
             'client_profile_id'    => $client->clientProfile->id,
@@ -211,7 +208,13 @@ class LoanController extends Controller
             'monthly_payment'      => $computed['monthly_payment'],
             'total_payable'        => $computed['total_payable'],
             'remaining_balance'    => $computed['total_payable'],
+            'release_date'         => $releaseDate,
+            'due_date'             => $dueDate,
         ]);
+
+        if ($loan->status === 'active') {
+            $loan->generateAmortizationSchedule();
+        }
 
         return redirect()->route('admin.loans.index')
             ->with('success', 'Loan updated successfully.');
@@ -238,8 +241,7 @@ class LoanController extends Controller
         }
 
         $monthlyPayment = round($rawMonthlyPayment, 2);
-
-        $totalPayable = round($rawMonthlyPayment * $termMonths, 2);
+        $totalPayable   = round($rawMonthlyPayment * $termMonths, 2);
 
         return [
             'monthly_payment' => $monthlyPayment,

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use DateTimeInterface;
 
 class Loan extends Model
 {
@@ -16,7 +17,6 @@ class Loan extends Model
         'term_months',
         'release_date',
         'status',
-
         'monthly_payment',
         'total_payable',
         'due_date',
@@ -34,7 +34,7 @@ class Loan extends Model
             if ($loan->status === 'active' && !$loan->release_date) {
                 $loan->release_date = now()->toDateString();
             }
-            if (! $loan->remaining_balance) {
+            if (!$loan->remaining_balance) {
                 $loan->remaining_balance = $loan->total_payable;
             }
         });
@@ -45,19 +45,15 @@ class Loan extends Model
             }
         });
 
-        // After save → generate amortization schedule
         static::saved(function ($loan) {
             if ($loan->wasChanged('status') && $loan->status === 'active') {
                 $loan->generateAmortizationSchedule();
                 $loan->remaining_balance = $loan->total_payable;
-                $loan->saveQuietly(); // avoid recursion
+                $loan->saveQuietly();
             }
         });
     }
 
-    /**
-     * Generate amortization schedule (full bank-style breakdown)
-     */
     public function generateAmortizationSchedule()
     {
         $this->payments()->delete();
@@ -105,5 +101,10 @@ class Loan extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
     }
 }
