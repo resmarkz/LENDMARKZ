@@ -24,35 +24,10 @@ class Loan extends Model
     ];
 
     protected $casts = [
-        'release_date' => 'date',
-        'due_date'     => 'date',
+        'release_date' => 'datetime',
+        'due_date'     => 'datetime',
     ];
 
-    protected static function booted()
-    {
-        static::creating(function ($loan) {
-            if ($loan->status === 'active' && !$loan->release_date) {
-                $loan->release_date = now()->toDateString();
-            }
-            if (!$loan->remaining_balance) {
-                $loan->remaining_balance = $loan->total_payable;
-            }
-        });
-
-        static::updating(function ($loan) {
-            if ($loan->isDirty('status') && $loan->status === 'active' && !$loan->release_date) {
-                $loan->release_date = now()->toDateString();
-            }
-        });
-
-        static::saved(function ($loan) {
-            if ($loan->wasChanged('status') && $loan->status === 'active') {
-                $loan->generateAmortizationSchedule();
-                $loan->remaining_balance = $loan->total_payable;
-                $loan->saveQuietly();
-            }
-        });
-    }
 
     public function generateAmortizationSchedule()
     {

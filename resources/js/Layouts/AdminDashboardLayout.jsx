@@ -20,7 +20,6 @@ function AdminDashboardLayout({ children, auth }) {
                 setUserDropdownOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -34,7 +33,7 @@ function AdminDashboardLayout({ children, auth }) {
                 {
                     name: "Overview",
                     icon: "fas fa-tachometer-alt",
-                    href: '/admin/dashboard',
+                    href: "/admin/dashboard",
                 },
             ],
         },
@@ -44,39 +43,39 @@ function AdminDashboardLayout({ children, auth }) {
                 {
                     name: "Manage Users",
                     icon: "fas fa-users",
-                    href: '/admin/manage-users/admins',
+                    href: "/admin/manage-users",
                     subLinks: [
                         {
                             name: "Admins",
                             icon: "fas fa-user-shield",
-                            href: '/admin/manage-users/admins'
+                            href: "/admin/manage-users/admins",
                         },
                         {
                             name: "Collectors",
                             icon: "fas fa-user-tie",
-                            href: '/admin/manage-users/collectors',
+                            href: "/admin/manage-users/collectors",
                         },
                         {
                             name: "Clients",
                             icon: "fas fa-user-friends",
-                            href: '/admin/manage-users/clients',
+                            href: "/admin/manage-users/clients",
                         },
                     ],
                 },
                 {
                     name: "Loans",
                     icon: "fas fa-hand-holding-usd",
-                    href: '/admin/loans',
+                    href: "/admin/loans",
                 },
                 {
                     name: "Payments",
                     icon: "fas fa-money-bill-wave",
-                    href: '/admin/payments',
+                    href: "/admin/payments",
                 },
                 {
                     name: "Reports",
                     icon: "fas fa-chart-bar",
-                    href: '/admin/reports',
+                    href: "/admin/reports",
                 },
             ],
         },
@@ -89,13 +88,16 @@ function AdminDashboardLayout({ children, auth }) {
         }));
     };
 
-    const isActiveLink = (href) => {
-        return url.startsWith(href);
+    const isActiveLink = (href, subLinks = []) => {
+        if (url.startsWith(href)) return true;
+        if (subLinks.length > 0) {
+            return subLinks.some((subLink) => url.startsWith(subLink.href));
+        }
+        return false;
     };
 
     return (
         <div className="h-screen min-h-screen bg-gray-50 grid grid-cols-1 lg:grid-cols-[auto_1fr] grid-rows-[auto_1fr] overflow-hidden">
-            {/* Mobile sidebar overlay */}
             {sidebarOpen && (
                 <div
                     className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
@@ -140,7 +142,8 @@ function AdminDashboardLayout({ children, auth }) {
                                                         }
                                                         className={`flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium rounded-md cursor-pointer ${
                                                             isActiveLink(
-                                                                link.href
+                                                                link.href,
+                                                                link.subLinks
                                                             )
                                                                 ? "bg-indigo-50 text-indigo-700"
                                                                 : "text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
@@ -152,7 +155,8 @@ function AdminDashboardLayout({ children, auth }) {
                                                                     link.icon
                                                                 } mr-3 ${
                                                                     isActiveLink(
-                                                                        link.href
+                                                                        link.href,
+                                                                        link.subLinks
                                                                     )
                                                                         ? "text-indigo-500"
                                                                         : "text-gray-400"
@@ -164,16 +168,24 @@ function AdminDashboardLayout({ children, auth }) {
                                                             className={`fas fa-chevron-${
                                                                 openDropdowns[
                                                                     link.name
-                                                                ]
+                                                                ] ||
+                                                                isActiveLink(
+                                                                    link.href,
+                                                                    link.subLinks
+                                                                )
                                                                     ? "up"
                                                                     : "down"
                                                             } text-xs`}
                                                         ></i>
                                                     </button>
 
-                                                    {openDropdowns[
+                                                    {(openDropdowns[
                                                         link.name
-                                                    ] && (
+                                                    ] ||
+                                                        isActiveLink(
+                                                            link.href,
+                                                            link.subLinks
+                                                        )) && (
                                                         <div className="ml-10 mt-1 space-y-1 pl-2 border-l-2 border-gray-100">
                                                             {link.subLinks.map(
                                                                 (subLink) => (
@@ -238,7 +250,6 @@ function AdminDashboardLayout({ children, auth }) {
                 </div>
             </aside>
 
-            {/* Header */}
             <header className="sticky top-0 h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 lg:px-8 z-20 col-start-1 lg:col-start-2 col-span-1">
                 <button
                     type="button"
@@ -299,7 +310,6 @@ function AdminDashboardLayout({ children, auth }) {
                                     >
                                         Profile
                                     </Link>
-
                                     <Link
                                         href="/logout"
                                         method="post"
@@ -315,7 +325,6 @@ function AdminDashboardLayout({ children, auth }) {
                 </div>
             </header>
 
-            {/* Main content */}
             <main className="overflow-auto bg-white col-start-1 lg:col-start-2">
                 <div className="py-6 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
                     {children}

@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\CollectorProfileController;
 use App\Http\Controllers\ContactReferenceController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -83,9 +84,7 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('payments')->name('payments.')->group(function () {
-            Route::get('/', function () {
-                return Inertia::render('Admin/Payments/Index');
-            })->name('index');
+            Route::get('/', [PaymentController::class, 'index'])->name('index');
             Route::get('/create', function () {
                 return Inertia::render('Admin/Payments/Create');
             })->name('create');

@@ -1,156 +1,253 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout';
+import React, { useState } from "react";
+import { Link, router } from "@inertiajs/react";
+import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import formatCurrency from "@/utils/formatCurrency";
 
-const PaymentIndex = ({ auth }) => {
-    const payments = [
-        {
-            id: 1,
-            loan_id: 1,
-            collector_profile_id: 1,
-            collector_name: 'John Doe',
-            client_profile_id: 1,
-            client_name: 'Alice Brown',
-            principal_amount: 1000.00,
-            interest_amount: 100.00,
-            total_amount: 1100.00,
-            due_date: '2024-01-31',
-            amount_paid: 860.62,
-            payment_date: '2024-02-01',
-            payment_method: 'Gcash',
-            reference_no: 'REF001',
-            status: 'completed',
-        },
-        {
-            id: 2,
-            loan_id: 2,
-            collector_profile_id: 2,
-            collector_name: 'Jane Smith',
-            client_profile_id: 2,
-            client_name: 'Bob White',
-            principal_amount: 1200.00,
-            interest_amount: 120.00,
-            total_amount: 1320.00,
-            due_date: '2024-02-28',
-            amount_paid: 886.41,
-            payment_date: '2024-03-01',
-            payment_method: 'Bank Transfer',
-            reference_no: 'REF002',
-            status: 'completed',
-        },
-    ];
+const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
+    const [values, setValues] = useState({
+        search: filters.search || "",
+        status: filters.status || "",
+        start_date: filters.start_date || "",
+        end_date: filters.end_date || "",
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        router.get("/admin/payments", values, {
+            preserveState: true,
+            replace: true,
+        });
+    };
+
+    const handleClear = () => {
+        setValues({ search: "", status: "", start_date: "", end_date: "" });
+        router.get(
+            "/admin/payments",
+            {},
+            { preserveState: true, replace: true }
+        );
+    };
 
     return (
         <AdminDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Payments</h1>
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-700">Filter Payments</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <label htmlFor="filter_loan_id" className="block text-sm font-medium text-gray-700">Loan ID:</label>
-                            <input
-                                type="number"
-                                id="filter_loan_id"
-                                name="filter_loan_id"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                placeholder="Filter by Loan ID"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="filter_payment_method" className="block text-sm font-medium text-gray-700">Payment Method:</label>
-                            <input
-                                type="text"
-                                id="filter_payment_method"
-                                name="filter_payment_method"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                placeholder="Filter by Payment Method"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="filter_status" className="block text-sm font-medium text-gray-700">Status:</label>
-                            <select
-                                id="filter_status"
-                                name="filter_status"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            >
-                                <option value="">All Statuses</option>
-                                <option value="completed">Completed</option>
-                                <option value="pending">Pending</option>
-                                <option value="failed">Failed</option>
-                                <option value="reversed">Reversed</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="filter_payment_date" className="block text-sm font-medium text-gray-700">Payment Date:</label>
-                            <input
-                                type="date"
-                                id="filter_payment_date"
-                                name="filter_payment_date"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                        </div>
-                    </div>
-                    <div className="mt-6 text-right">
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Apply Filters
-                        </button>
-                    </div>
-                </div>
-                <div className="mb-6">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-3xl font-bold text-gray-800">
+                        Manage Payments
+                    </h1>
                     <Link
                         href="/admin/payments/create"
-                        className="inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
                     >
                         Create New Payment
                     </Link>
                 </div>
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="mb-6 p-4 bg-gray-50 rounded-lg"
+                >
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Search
+                            </label>
+                            <input
+                                type="text"
+                                name="search"
+                                value={values.search}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                placeholder="Search by client or collector..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Status
+                            </label>
+                            <select
+                                name="status"
+                                value={values.status}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                            >
+                                <option value="">All</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending">Pending</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                        <div className="flex items-end space-x-2">
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700"
+                            >
+                                Filter
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Payment Date From
+                            </label>
+                            <input
+                                type="date"
+                                name="start_date"
+                                value={values.start_date}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Payment Date To
+                            </label>
+                            <input
+                                type="date"
+                                name="end_date"
+                                value={values.end_date}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                    </div>
+                </form>
+
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
+                    <table className="table-auto w-full divide-y divide-gray-200 whitespace-nowrap">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loan ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collector Name</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client Name</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal Amount</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest Amount</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Paid</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference No.</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    ID
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Loan ID
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Client
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Collector
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Principal
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Interest
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Total Amount
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Amount Paid
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Due Date
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Payment Date
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Status
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {payments.map((payment) => (
-                                <tr key={payment.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{payment.id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.loan_id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.collector_name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.client_name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.principal_amount}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.interest_amount}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.total_amount}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.due_date}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.amount_paid}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.payment_date}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.payment_method}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.reference_no}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.status}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                                        <Link href={`/admin/payments/${payment.id}`} className="text-blue-600 hover:text-blue-900 mr-4">View</Link>
-                                        <Link href={`/admin/payments/${payment.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                        <button className="text-red-600 hover:text-red-900">Delete</button>
+                            {payments.length > 0 ? (
+                                payments.map((payment) => (
+                                    <tr key={payment.id}>
+                                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                            {payment.id}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.loan_id}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.client_first_name}{" "}
+                                            {payment.client_last_name}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.collector_first_name}{" "}
+                                            {payment.collector_last_name}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {formatCurrency(
+                                                payment.principal_amount
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {formatCurrency(
+                                                payment.interest_amount
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {formatCurrency(
+                                                payment.total_amount
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.amount_paid
+                                                ? formatCurrency(
+                                                      payment.amount_paid
+                                                  )
+                                                : "—"}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.due_date}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.payment_date || "—"}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.status}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm font-medium">
+                                            {payment.is_paid ? (
+                                                <span className="text-green-600 font-semibold">
+                                                    Paid
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() =>
+                                                        router.post(
+                                                            `/admin/payments/${payment.id}/pay`
+                                                        )
+                                                    }
+                                                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                                                >
+                                                    Pay
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan="12"
+                                        className="px-6 py-4 text-center text-sm text-gray-500"
+                                    >
+                                        No payments found.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
