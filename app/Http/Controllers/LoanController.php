@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -110,7 +111,7 @@ class LoanController extends Controller
             'remaining_balance'    => $computed['total_payable'],
             'release_date'         => $validatedData['status'] === 'active' ? now() : null,
             'due_date'             => $validatedData['status'] === 'active'
-                ? now()->copy()->addMonths($validatedData['term_months'])
+                ? now()->copy()->addMonths((int) $validatedData['term_months'])
                 : null,
         ]);
 
@@ -181,7 +182,7 @@ class LoanController extends Controller
             'principal_amount' => 'required|numeric|min:0',
             'interest_rate'    => 'required|numeric|min:0',
             'term_months'      => 'required|integer|min:1',
-            'status'           => 'required|in:pending,active',
+            'status'           => 'required|in:pending,active,paid,overdue,cancelled',
         ]);
 
         $client    = User::find($validatedData['client_id']);
@@ -193,9 +194,11 @@ class LoanController extends Controller
             $validatedData['term_months']
         );
 
-        $releaseDate = $loan->release_date ?? ($validatedData['status'] === 'active' ? now() : null);
-        $dueDate = $validatedData['status'] === 'active'
-            ? ($releaseDate->copy()->addMonths($validatedData['term_months']))
+        $releaseDateValue = $loan->release_date ?? ($validatedData['status'] === 'active' ? now() : null);
+        $releaseDate = $releaseDateValue ? Carbon::parse($releaseDateValue) : null;
+
+        $dueDate = $validatedData['status'] === 'active' && $releaseDate
+            ? ($releaseDate->copy()->addMonths((int) $validatedData['term_months']))
             : $loan->due_date;
 
         $loan->update([

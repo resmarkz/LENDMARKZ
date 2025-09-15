@@ -91,7 +91,8 @@ const LoanEdit = ({ ...props }) => {
                             step="0.01"
                             id="principal_amount"
                             name="principal_amount"
-                            defaultValue={loan.principal_amount}
+                            value={data.principal_amount}
+                            onChange={(e) => setData("principal_amount", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
@@ -180,21 +181,7 @@ const LoanEdit = ({ ...props }) => {
                             readOnly
                         />
                     </div>
-                    <div>
-                        <label
-                            htmlFor="due_date"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Due Date:
-                        </label>
-                        <input
-                            type="date"
-                            id="due_date"
-                            name="due_date"
-                            defaultValue={loan.due_date}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
-                    </div>
+                    
                     <div>
                         <label
                             htmlFor="status"

@@ -24,10 +24,9 @@ class Loan extends Model
     ];
 
     protected $casts = [
-        'release_date' => 'datetime',
-        'due_date'     => 'datetime',
+        'release_date' => 'date',
+        'due_date'     => 'date',
     ];
-
 
     public function generateAmortizationSchedule()
     {
