@@ -43,12 +43,6 @@ const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
                     <h1 className="text-3xl font-bold text-gray-800">
                         Manage Payments
                     </h1>
-                    <Link
-                        href="/admin/payments/create"
-                        className="inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-                    >
-                        Create New Payment
-                    </Link>
                 </div>
 
                 <form
@@ -224,16 +218,12 @@ const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
                                                     Paid
                                                 </span>
                                             ) : (
-                                                <button
-                                                    onClick={() =>
-                                                        router.post(
-                                                            `/admin/payments/${payment.id}/pay`
-                                                        )
-                                                    }
+                                                <Link
+                                                    href={`/admin/payments/${payment.id}/pay`}
                                                     className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
                                                 >
                                                     Pay
-                                                </button>
+                                                </Link>
                                             )}
                                         </td>
                                     </tr>

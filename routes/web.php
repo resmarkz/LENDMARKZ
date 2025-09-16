@@ -7,12 +7,25 @@ use App\Http\Controllers\CollectorProfileController;
 use App\Http\Controllers\ContactReferenceController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentIntegration\PaymongoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Home/index');
 })->name('home');
+
+Route::get('/test', function () {
+    return Inertia::render('Test');
+});
+Route::get('/payment-methods', function () {
+    return Inertia::render('PaymentMethods');
+});
+Route::post('/payment-intent', [PaymongoController::class, 'createIntent']);
+Route::post('/payment-attach', [PaymongoController::class, 'attachMethod']);
+Route::get('/payment/verify', [PaymongoController::class, 'verify']);
+Route::post('/qrph-generate', [PaymongoController::class, 'generateQrph'])->name('qrph.generate');
+
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -85,9 +98,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('payments')->name('payments.')->group(function () {
             Route::get('/', [PaymentController::class, 'index'])->name('index');
-            Route::get('/create', function () {
-                return Inertia::render('Admin/Payments/Create');
-            })->name('create');
+            Route::get('{payment}/pay', [PaymentController::class, 'create'])->name('pay');
             Route::get('/{id}', function () {
                 return Inertia::render('Admin/Payments/Show');
             })->name('show');
