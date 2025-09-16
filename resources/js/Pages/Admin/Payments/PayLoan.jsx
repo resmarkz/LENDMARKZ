@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import axios from "axios";
 
 const PaymentCreate = ({ auth, payment }) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("gcash");
+    const [loading, setLoading] = useState(false);
 
-    // Convert string amounts to numbers
     const paymentData = {
         ...payment,
         principal_amount: parseFloat(payment.principal_amount),
@@ -16,10 +17,10 @@ const PaymentCreate = ({ auth, payment }) => {
             : null,
     };
 
-    const { data, setData, processing } = useForm({
+    const { data, setData } = useForm({
         scheduled_payment_id: paymentData.id,
         loan_id: paymentData.loan_id,
-        amount: paymentData.total_amount, // Now this is a number
+        amount: paymentData.total_amount,
         currency: "PHP",
         payment_method_type: "gcash",
     });
@@ -29,33 +30,50 @@ const PaymentCreate = ({ auth, payment }) => {
         setData("payment_method_type", method);
     };
 
-    const handleSubmitPayment = (e) => {
+    const handleSubmitPayment = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        console.log("Simulating payment intent creation with:", data);
-        alert(
-            `Simulating redirection for ₱${data.amount.toFixed(
-                2
-            )} via ${selectedPaymentMethod} to PayMongo/Payment Gateway...`
-        );
+        try {
+            const intentResponse = await axios.post("/payment-intent", {
+                amount: data.amount,
+                payment_method: data.payment_method_type,
+            });
+
+            const intentId = intentResponse.data.data.id;
+
+            const methodResponse = await axios.post("/payment-method", {
+                type: data.payment_method_type,
+                name: `${paymentData.client_first_name} ${paymentData.client_last_name}`,
+                email: paymentData.client_email,
+            });
+
+            const paymentMethodId = methodResponse.data.data.id;
+
+            const attachResponse = await axios.post("/payment-attach", {
+                intent_id: intentId,
+                payment_method_id: paymentMethodId,
+                payment_id: data.scheduled_payment_id, // ✅ include payment_id
+            });
+
+            const checkoutUrl =
+                attachResponse.data.data.attributes.next_action.redirect.url;
+
+            window.location.href = checkoutUrl;
+        } catch (error) {
+            console.error(
+                "Payment Error:",
+                error.response?.data || error.message
+            );
+            alert("Payment failed. Please check console.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const paymentMethods = [
-        {
-            id: "gcash",
-            name: "GCash",
-            icon: "fas fa-mobile-alt",
-        },
-        {
-            id: "grabpay",
-            name: "GrabPay",
-            icon: "fas fa-wallet",
-        },
-        {
-            id: "paymaya",
-            name: "PayMaya",
-            icon: "fas fa-credit-card",
-        },
+        { id: "gcash", name: "GCash", icon: "fas fa-mobile-alt" },
+        { id: "paymaya", name: "PayMaya", icon: "fas fa-credit-card" },
     ];
 
     return (
@@ -65,7 +83,6 @@ const PaymentCreate = ({ auth, payment }) => {
                     Process Payment for Scheduled Installment
                 </h1>
 
-                {/* Client and Collector Information */}
                 <div className="mb-6 p-6 bg-blue-50 rounded-lg shadow-inner">
                     <h2 className="text-xl font-semibold mb-4 text-blue-800">
                         Client & Collector Information
@@ -168,8 +185,7 @@ const PaymentCreate = ({ auth, payment }) => {
                                             selectedPaymentMethod === method.id
                                                 ? "text-indigo-600"
                                                 : "text-gray-500"
-                                        }
-                                    `}
+                                        }`}
                                     ></i>
                                     <span
                                         className={`text-lg font-semibold
@@ -177,8 +193,7 @@ const PaymentCreate = ({ auth, payment }) => {
                                             selectedPaymentMethod === method.id
                                                 ? "text-indigo-800"
                                                 : "text-gray-700"
-                                        }
-                                    `}
+                                        }`}
                                     >
                                         {method.name}
                                     </span>
@@ -189,11 +204,35 @@ const PaymentCreate = ({ auth, payment }) => {
                         <div className="flex items-center justify-end gap-4 mt-6">
                             <button
                                 type="submit"
-                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                disabled={processing}
+                                className="inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white 
+                                    bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                disabled={loading}
                             >
-                                {processing ? "Processing..." : "Pay Now"}
+                                {loading && (
+                                    <svg
+                                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                        ></path>
+                                    </svg>
+                                )}
+                                {loading ? "Processing..." : "Pay Now"}
                             </button>
+
                             <Link
                                 href={`/admin/payments/${paymentData.loan_id}`}
                                 className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -86,6 +86,7 @@ class PaymentController extends Controller
             'client_id' => $payment->loan->clientProfile->id,
             'client_first_name' => $payment->loan->clientProfile->user->first_name,
             'client_last_name' => $payment->loan->clientProfile->user->last_name,
+            'client_email' => $payment->loan->clientProfile->user->email,
             'principal_amount' => $payment->principal_amount,
             'interest_amount' => $payment->interest_amount,
             'total_amount' => $payment->total_amount,
@@ -129,8 +130,33 @@ class PaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
-        //
+        $validatedData = $request->validate([
+            'payment_date' => 'required|date',
+            'payment_method' => 'required|string|max:255',
+            'reference_no' => 'nullable|string|max:255',
+            'amount_paid' => 'required|numeric|min:0',
+        ]);
+
+        $payment->update([
+            'payment_date'   => $validatedData['payment_date'],
+            'payment_method' => $validatedData['payment_method'],
+            'reference_no'   => $validatedData['reference_no'],
+            'amount_paid'    => $validatedData['amount_paid'],
+            'is_paid'        => true,
+            'status'         => 'paid',
+        ]);
+
+        $loan = $payment->loan;
+        $totalPaid = $loan->payments()->sum('amount_paid');
+        $remaining = max(0, $loan->total_amount - $totalPaid);
+
+        $loan->update([
+            'remaining_balance' => $remaining,
+        ]);
+
+        return redirect()->back()->with('success', 'Payment updated and loan balance recalculated.');
     }
+
 
     /**
      * Remove the specified resource from storage.

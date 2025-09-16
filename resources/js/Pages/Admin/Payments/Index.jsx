@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import formatCurrency from "@/utils/formatCurrency";
+import successHandler from "@/utils/successHandler";
+import errorHandler from "@/utils/errorHandler";
 
-const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
+const PaymentIndex = ({
+    auth,
+    payments = [],
+    filters = {},
+    success = {},
+    error = {},
+}) => {
     const [values, setValues] = useState({
         search: filters.search || "",
         status: filters.status || "",
         start_date: filters.start_date || "",
         end_date: filters.end_date || "",
     });
+
+    useEffect(() => {
+        successHandler(success);
+    }, [success]);
+
+    useEffect(() => {
+        errorHandler(error);
+    }, [error]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -156,6 +172,9 @@ const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
                                     Payment Date
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Reference No
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Status
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -210,6 +229,9 @@ const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
                                             {payment.payment_date || "—"}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
+                                            {payment.reference_no || "—"}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-500">
                                             {payment.status}
                                         </td>
                                         <td className="px-6 py-4 text-sm font-medium">
@@ -231,7 +253,7 @@ const PaymentIndex = ({ auth, payments = [], filters = {} }) => {
                             ) : (
                                 <tr>
                                     <td
-                                        colSpan="12"
+                                        colSpan="13"
                                         className="px-6 py-4 text-center text-sm text-gray-500"
                                     >
                                         No payments found.

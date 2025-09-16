@@ -15,18 +15,6 @@ Route::get('/', function () {
     return Inertia::render('Home/index');
 })->name('home');
 
-Route::get('/test', function () {
-    return Inertia::render('Test');
-});
-Route::get('/payment-methods', function () {
-    return Inertia::render('PaymentMethods');
-});
-Route::post('/payment-intent', [PaymongoController::class, 'createIntent']);
-Route::post('/payment-attach', [PaymongoController::class, 'attachMethod']);
-Route::get('/payment/verify', [PaymongoController::class, 'verify']);
-Route::post('/qrph-generate', [PaymongoController::class, 'generateQrph'])->name('qrph.generate');
-
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -37,6 +25,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Paymongo Routes
+    Route::post('/payment-intent', [PaymongoController::class, 'createIntent']);
+    Route::post('/payment-attach', [PaymongoController::class, 'attachMethod']);
+    Route::get('/payment/verify', [PaymongoController::class, 'verify'])->name('paymongo.verify');
+    Route::post('/payment-method', [PaymongoController::class, 'createPaymentMethod']);
 
     Route::get('/profile', function () {
         return Inertia::render('Profile/Edit');
