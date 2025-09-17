@@ -1,81 +1,106 @@
-import React from "react";
-import { Link } from "@inertiajs/react";
+import React, { useEffect } from "react";
+import { useForm } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
+import errorHandler from "@/Utils/errorHandler";
 
-const ClientCreateLoan = () => {
+export default function ApplyLoan() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        principal_amount: "",
+        term_months: "",
+    });
+
+    useEffect(() => {
+        errorHandler(errors);
+    }, [errors]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post("/client/loans/apply", {
+            onSuccess: () => reset(),
+        });
+    };
+
+    const loanOptions = [5000, 10000, 25000, 50000, 75000, 100000];
+
     return (
         <ClientDashboardLayout>
-            <div className="p-6 bg-white rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">
-                    Apply for New Loan
+            <div className="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-6">
+                <h1 className="text-2xl font-bold text-gray-800 mb-6">
+                    Apply for a Loan
                 </h1>
-                <form className="space-y-6">
+
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label
-                            htmlFor="principal_amount"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Principal Amount:
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                            Choose Loan Amount
                         </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            id="principal_amount"
-                            name="principal_amount"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter desired principal amount"
-                        />
+                        <div className="grid grid-cols-2 gap-4">
+                            {loanOptions.map((amount) => (
+                                <label
+                                    key={amount}
+                                    className={`cursor-pointer rounded-xl border p-4 text-center shadow-sm transition 
+                                        ${
+                                            data.principal_amount == amount
+                                                ? "border-indigo-600 bg-indigo-50 text-indigo-700 font-semibold"
+                                                : "border-gray-300 bg-white text-gray-700 hover:border-indigo-400"
+                                        }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="principal_amount"
+                                        value={amount}
+                                        checked={
+                                            data.principal_amount == amount
+                                        }
+                                        onChange={(e) =>
+                                            setData(
+                                                "principal_amount",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="hidden"
+                                    />
+                                    ₱{amount.toLocaleString()}
+                                </label>
+                            ))}
+                        </div>
                     </div>
+
                     <div>
-                        <label
-                            htmlFor="interest_rate"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Interest Rate (%):
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Loan Terms (in months) with corresponding interest
                         </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            id="interest_rate"
-                            name="interest_rate"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter interest rate"
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="term_months"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Term (Months):
-                        </label>
-                        <input
-                            type="number"
-                            id="term_months"
+                        <select
                             name="term_months"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Enter desired loan term in months"
-                        />
+                            value={data.term_months}
+                            onChange={(e) =>
+                                setData("term_months", e.target.value)
+                            }
+                            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        >
+                            <option value="">Select Terms</option>
+                            <option value="6">6 months (12%)</option>
+                            <option value="12">12 months (15%)</option>
+                            <option value="18">18 months (20%)</option>
+                            <option value="24">24 months (25%)</option>
+                            <option value="36">36 months (30%)</option>
+                            <option value="48">48 months (35%)</option>
+                        </select>
                     </div>
-                    {/* Status will be defaulted to 'pending' by backend */}
-                    <div className="flex items-center justify-end gap-4 mt-6">
+
+                    <div>
                         <button
                             type="submit"
-                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={processing}
+                            className="w-full py-3 px-4 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition disabled:opacity-50"
                         >
-                            Submit Application
+                            {processing
+                                ? "Submitting..."
+                                : "Submit Application"}
                         </button>
-                        <Link
-                            href="/client/loans"
-                            className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Cancel
-                        </Link>
                     </div>
                 </form>
             </div>
         </ClientDashboardLayout>
     );
-};
-
-export default ClientCreateLoan;
+}

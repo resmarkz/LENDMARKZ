@@ -41,13 +41,10 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Client/Dashboard');
         })->name('dashboard');
 
-        Route::get('/loans', function () {
-            return Inertia::render('Client/Index');
-        })->name('loans.index');
+        Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 
-        Route::get('/loans/create-loan', function () {
-            return Inertia::render('Client/CreateLoan');
-        })->name('loans.create-loan');
+        Route::get('/loans/create-loan', [LoanController::class, 'create'])->name('loans.create-loan');
+        Route::post('/loans/apply', [LoanController::class, 'store'])->name('loans.apply');
 
         Route::get('/loans/{id}/pay', function () {
             return Inertia::render('Client/PayLoan');
@@ -58,22 +55,10 @@ Route::middleware('auth')->group(function () {
         })->name('payments.create');
 
         Route::get('/payments/{loan}', function () {
-            return Inertia::render('Client/Payments/Index', [
-                'loan' => [
-                    'id' => 1,
-                    'marketing_id' => 'LNDMK-001',
-                    'principal_amount' => 10000.00,
-                    'interest_rate' => 0.05,
-                    'loan_term_months' => 12,
-                    'start_date' => '2024-01-01',
-                ],
-                'payments' => [],
-            ]);
+            return Inertia::render('Client/Payments/Index');
         })->name('payments.show');
 
-        Route::get('/loans/{id}', function () {
-            return Inertia::render('Client/Show');
-        })->name('loans.show');
+        Route::get('/loans/{loan}', [LoanController::class, 'show'])->name('loans.show');
     });
 
     Route::prefix('admin')->name('admin.')->middleware("role:admin")->group(function () {

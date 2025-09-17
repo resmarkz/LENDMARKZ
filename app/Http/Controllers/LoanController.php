@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CollectorProfile;
 use App\Models\Loan;
 use App\Models\User;
 use Carbon\Carbon;
@@ -11,7 +12,23 @@ use Inertia\Inertia;
 
 class LoanController extends Controller
 {
+    private $userRole;
+
+    public function __construct()
+    {
+        $this->userRole = Auth::check() ? Auth::user()->role : null;
+    }
+
     public function index(Request $request)
+    {
+        return match ($this->userRole) {
+            'admin'  => $this->viewIndexForAdmin($request),
+            'client' => $this->viewIndexForClient($request),
+            default  => abort(403, 'Unauthorized action.'),
+        };
+    }
+
+    private function viewIndexForAdmin(Request $request)
     {
         $loans = Loan::with(['clientProfile.user', 'collectorProfile.user'])
             ->when($request->input('search'), function ($query, $search) {
@@ -52,6 +69,35 @@ class LoanController extends Controller
         ]);
     }
 
+    private function viewIndexForClient(Request $request)
+    {
+        $client = Auth::user();
+
+        $loansQuery = $client->clientProfile->loans()
+            ->when($request->input('loan_id'), fn($q, $loanId) => $q->where('id', $loanId))
+            ->when($request->input('status'), fn($q, $status) => $q->where('status', $status))
+            ->when($request->input('due_date'), fn($q, $due) => $q->whereDate('due_date', $due));
+
+        $loans = $loansQuery->paginate(10)
+            ->through(fn($loan) => [
+                'id'               => $loan->id,
+                'principal_amount' => $loan->principal_amount,
+                'interest_rate'    => $loan->interest_rate,
+                'term_months'      => $loan->term_months,
+                'monthly_payment'  => $loan->monthly_payment,
+                'total_payable'    => $loan->total_payable,
+                'release_date'     => $loan->release_date?->toDateString(),
+                'due_date'         => $loan->due_date?->toDateString(),
+                'status'           => $loan->status,
+            ]);
+
+        return Inertia::render('Client/Index', [
+            'loans' => $loans,
+        ]);
+    }
+
+
+
     public function create()
     {
         $clients = User::where('role', 'client')->get();
@@ -63,7 +109,7 @@ class LoanController extends Controller
                 'clients'    => $clients,
                 'collectors' => $collectors,
             ]),
-            'client' => Inertia::render('Client/Loans/Create'),
+            'client' => Inertia::render('Client/CreateLoan'),
             default  => abort(403, 'Unauthorized action.'),
         };
     }
@@ -123,9 +169,69 @@ class LoanController extends Controller
             ->with('success', 'Loan created successfully.');
     }
 
-    private function handleClientStore(Request $request) {}
+    private function handleClientStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'principal_amount' => 'required|numeric|min:0',
+            'term_months'      => 'required|integer|min:1',
+        ]);
+
+        $interestRate = match ($validatedData['term_months']) {
+            6  => 12.0,
+            12 => 15.0,
+            18 => 20.0,
+            24 => 25.0,
+            36 => 30.0,
+            48 => 35.0,
+            default => 45.0,
+        };
+
+        $computed = $this->computeFields(
+            $validatedData['principal_amount'],
+            $interestRate,
+            $validatedData['term_months']
+        );
+
+        $client = Auth::user();
+
+        $collector = CollectorProfile::withCount(['loans as active_loans_count' => function ($q) {
+            $q->where('status', 'active');
+        }])
+            ->orderBy('active_loans_count', 'asc')
+            ->inRandomOrder()
+            ->first();
+
+        $collectorProfileId = $collector?->id ?? null;
+
+        $client->clientProfile->loans()->create([
+            'collector_profile_id' => $collectorProfileId,
+            'principal_amount'     => $validatedData['principal_amount'],
+            'interest_rate'        => $interestRate,
+            'term_months'          => $validatedData['term_months'],
+            'status'               => 'pending',
+            'monthly_payment'      => $computed['monthly_payment'],
+            'total_payable'        => $computed['total_payable'],
+            'remaining_balance'    => $computed['total_payable'],
+            'release_date'         => null,
+            'due_date'             => null,
+        ]);
+
+
+        return redirect()->route('client.loans.index')
+            ->with('success', 'Loan application submitted successfully.');
+    }
+
 
     public function show(Loan $loan)
+    {
+        return match ($this->userRole) {
+            'admin'  => $this->showForAdmin($loan),
+            'client' => $this->showForClient($loan),
+            default  => abort(403, 'Unauthorized action.'),
+        };
+    }
+
+    private function showForAdmin(Loan $loan)
     {
         $loan->load(['clientProfile.user', 'collectorProfile.user', 'payments']);
 
@@ -144,6 +250,23 @@ class LoanController extends Controller
                 'total_payable' => $loan->total_payable,
                 'status' => $loan->status,
                 'created_at' => $loan->created_at->toDateString(),
+            ],
+        ]);
+    }
+
+    private function showForClient(Loan $loan)
+    {
+        return Inertia::render('Client/Show', [
+            'loan' => [
+                'id' => $loan->id,
+                'principal_amount' => $loan->principal_amount,
+                'interest_rate' => $loan->interest_rate,
+                'term_months' => $loan->term_months,
+                'monthly_payment' => $loan->monthly_payment,
+                'total_payable' => $loan->total_payable,
+                'release_date' => $loan->release_date->toDateString(),
+                'due_date' => $loan->due_date->toDateString(),
+                'status' => $loan->status,
             ],
         ]);
     }

@@ -45,10 +45,14 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
             min_interest: "",
             max_interest: "",
         });
-        router.get("/admin/loans", {}, {
-            preserveState: true,
-            replace: true,
-        });
+        router.get(
+            "/admin/loans",
+            {},
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
     };
 
     return (
@@ -132,8 +136,12 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                             >
                                 <option value="">All</option>
                                 {collectors.map((collector) => (
-                                    <option key={collector.id} value={collector.id}>
-                                        {collector.first_name} {collector.last_name}
+                                    <option
+                                        key={collector.id}
+                                        value={collector.id}
+                                    >
+                                        {collector.first_name}{" "}
+                                        {collector.last_name}
                                     </option>
                                 ))}
                             </select>
