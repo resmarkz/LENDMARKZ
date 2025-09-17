@@ -33,6 +33,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/verify', [PaymongoController::class, 'verify'])->name('paymongo.verify');
     Route::post('/payment-method', [PaymongoController::class, 'createPaymentMethod']);
 
+    Route::get('/dashboard', function () {
+        return match (Auth::user()->role) {
+            'admin' => Inertia::render('Admin/Dashboard'),
+            'client' => Inertia::render('Client/Dashboard'),
+            'collector' => Inertia::render('Collector/Dashboard'),
+            default => abort(403, 'Unauthorized action.'),
+        };
+    })->name('dashboard');
+
     Route::get('/profile', function () {
         return Inertia::render('Profile/Edit');
     })->name('profile.edit');
@@ -46,17 +55,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/loans/create-loan', [LoanController::class, 'create'])->name('loans.create-loan');
         Route::post('/loans/apply', [LoanController::class, 'store'])->name('loans.apply');
 
-        Route::get('/loans/{id}/pay', function () {
-            return Inertia::render('Client/PayLoan');
-        })->name('loans.pay');
+        Route::get('/payments/{payment}/pay', [PaymentController::class, 'create'])->name('payments.pay');
 
-        Route::get('/payments/create', function () {
-            return Inertia::render('Client/Payments/Create');
-        })->name('payments.create');
-
-        Route::get('/payments/{loan}', function () {
-            return Inertia::render('Client/Payments/Index');
-        })->name('payments.show');
+        Route::get('/{client}/payments', [PaymentController::class, 'show'])->name('payments.show');
 
         Route::get('/loans/{loan}', [LoanController::class, 'show'])->name('loans.show');
     });

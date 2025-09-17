@@ -1,30 +1,28 @@
 import React, { useState } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
+import axios from "axios";
 
-const ClientPaymentCreate = ({ auth }) => {
-    const currentScheduledPayment = {
-        id: 999,
-        loan_id: 1,
-        principal_amount: 850.0,
-        interest_amount: 50.0,
-        total_amount: 900.0,
-        due_date: "2024-05-01",
-        status: "pending",
+const PayLoan = ({ auth, payment }) => {
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("gcash");
+    const [loading, setLoading] = useState(false);
+
+    const paymentData = {
+        ...payment,
+        principal_amount: parseFloat(payment.principal_amount),
+        interest_amount: parseFloat(payment.interest_amount),
+        total_amount: parseFloat(payment.total_amount),
+        amount_paid: payment.amount_paid
+            ? parseFloat(payment.amount_paid)
+            : null,
     };
 
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("card");
-
-    const { data, setData, processing } = useForm({
-        scheduled_payment_id: currentScheduledPayment.id,
-        loan_id: currentScheduledPayment.loan_id,
-        amount: currentScheduledPayment.total_amount,
+    const { data, setData } = useForm({
+        scheduled_payment_id: paymentData.id,
+        loan_id: paymentData.loan_id,
+        amount: paymentData.total_amount,
         currency: "PHP",
-        description: `Payment for installment ${currentScheduledPayment.id} of loan ${currentScheduledPayment.loan_id}`,
-        payment_method_type: selectedPaymentMethod,
-        billing_name: "John Doe",
-        billing_email: "john.doe@example.com",
-        billing_phone: "+639171234567",
+        payment_method_type: "gcash",
     });
 
     const handlePaymentMethodChange = (method) => {
@@ -32,43 +30,50 @@ const ClientPaymentCreate = ({ auth }) => {
         setData("payment_method_type", method);
     };
 
-    const handleSubmitPayment = (e) => {
+    const handleSubmitPayment = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        console.log("Simulating payment intent creation with:", data);
-        alert(
-            `Simulating redirection for ₱${data.amount.toFixed(
-                2
-            )} via ${selectedPaymentMethod} to PayMongo/Payment Gateway...`
-        );
+        try {
+            const intentResponse = await axios.post("/payment-intent", {
+                amount: data.amount,
+                payment_method: data.payment_method_type,
+            });
+
+            const intentId = intentResponse.data.data.id;
+
+            const methodResponse = await axios.post("/payment-method", {
+                type: data.payment_method_type,
+                name: `${paymentData.client_first_name} ${paymentData.client_last_name}`,
+                email: paymentData.client_email,
+            });
+
+            const paymentMethodId = methodResponse.data.data.id;
+
+            const attachResponse = await axios.post("/payment-attach", {
+                intent_id: intentId,
+                payment_method_id: paymentMethodId,
+                payment_id: data.scheduled_payment_id,
+            });
+
+            const checkoutUrl =
+                attachResponse.data.data.attributes.next_action.redirect.url;
+
+            window.location.href = checkoutUrl;
+        } catch (error) {
+            console.error(
+                "Payment Error:",
+                error.response?.data || error.message
+            );
+            alert("Payment failed. Please check console.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const paymentMethods = [
-        {
-            id: "card",
-            name: "Credit/Debit Card",
-            icon: "fas fa-credit-card",
-        },
-        {
-            id: "gcash",
-            name: "GCash",
-            icon: "fas fa-mobile-alt",
-        },
-        {
-            id: "grabpay",
-            name: "GrabPay",
-            icon: "fas fa-wallet",
-        },
-        {
-            id: "paymaya",
-            name: "PayMaya",
-            icon: "fas fa-credit-card",
-        },
-        {
-            id: "qrph",
-            name: "QRPH",
-            icon: "fas fa-qrcode",
-        },
+        { id: "gcash", name: "GCash", icon: "fas fa-mobile-alt" },
+        { id: "paymaya", name: "PayMaya", icon: "fas fa-credit-card" },
     ];
 
     return (
@@ -78,36 +83,65 @@ const ClientPaymentCreate = ({ auth }) => {
                     Process Payment for Scheduled Installment
                 </h1>
 
+                <div className="mb-6 p-6 bg-blue-50 rounded-lg shadow-inner">
+                    <h2 className="text-xl font-semibold mb-4 text-blue-800">
+                        Client & Collector Information
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-700">
+                        <div>
+                            <strong>Client:</strong>{" "}
+                            {paymentData.client_first_name}{" "}
+                            {paymentData.client_last_name}
+                        </div>
+                        <div>
+                            <strong>Client ID:</strong> {paymentData.client_id}
+                        </div>
+                        <div>
+                            <strong>Collector:</strong>{" "}
+                            {paymentData.collector_first_name}{" "}
+                            {paymentData.collector_last_name}
+                        </div>
+                        <div>
+                            <strong>Collector ID:</strong>{" "}
+                            {paymentData.collector_id}
+                        </div>
+                    </div>
+                </div>
+
                 <div className="mb-8 p-6 bg-indigo-50 rounded-lg shadow-inner">
                     <h2 className="text-xl font-semibold mb-4 text-indigo-800">
                         Scheduled Payment Details
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-indigo-700">
                         <div>
-                            <strong>Installment ID:</strong>{" "}
-                            {currentScheduledPayment.id}
+                            <strong>Payment ID:</strong> {paymentData.id}
                         </div>
                         <div>
-                            <strong>Due Date:</strong>{" "}
-                            {currentScheduledPayment.due_date}
+                            <strong>Loan ID:</strong> {paymentData.loan_id}
                         </div>
                         <div>
-                            <strong>Scheduled Principal:</strong> ₱
-                            {currentScheduledPayment.principal_amount.toFixed(
-                                2
-                            )}
+                            <strong>Due Date:</strong> {paymentData.due_date}
                         </div>
                         <div>
-                            <strong>Scheduled Interest:</strong> ₱
-                            {currentScheduledPayment.interest_amount.toFixed(2)}
+                            <strong>Status:</strong> {paymentData.status}
                         </div>
                         <div>
-                            <strong>Scheduled Total:</strong> ₱
-                            {currentScheduledPayment.total_amount.toFixed(2)}
+                            <strong>Principal Amount:</strong> ₱
+                            {paymentData.principal_amount.toFixed(2)}
                         </div>
                         <div>
-                            <strong>Status:</strong>{" "}
-                            {currentScheduledPayment.status}
+                            <strong>Interest Amount:</strong> ₱
+                            {paymentData.interest_amount.toFixed(2)}
+                        </div>
+                        <div>
+                            <strong>Total Amount:</strong> ₱
+                            {paymentData.total_amount.toFixed(2)}
+                        </div>
+                        <div>
+                            <strong>Amount Paid:</strong>{" "}
+                            {paymentData.amount_paid
+                                ? `₱${paymentData.amount_paid.toFixed(2)}`
+                                : "Not paid yet"}
                         </div>
                     </div>
                 </div>
@@ -123,7 +157,7 @@ const ClientPaymentCreate = ({ auth }) => {
                             </label>
                             <input
                                 type="text"
-                                value={`₱${currentScheduledPayment.total_amount.toFixed(
+                                value={`₱${paymentData.total_amount.toFixed(
                                     2
                                 )}`}
                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed sm:text-sm"
@@ -151,8 +185,7 @@ const ClientPaymentCreate = ({ auth }) => {
                                             selectedPaymentMethod === method.id
                                                 ? "text-indigo-600"
                                                 : "text-gray-500"
-                                        }
-                                    `}
+                                        }`}
                                     ></i>
                                     <span
                                         className={`text-lg font-semibold
@@ -160,8 +193,7 @@ const ClientPaymentCreate = ({ auth }) => {
                                             selectedPaymentMethod === method.id
                                                 ? "text-indigo-800"
                                                 : "text-gray-700"
-                                        }
-                                    `}
+                                        }`}
                                     >
                                         {method.name}
                                     </span>
@@ -172,13 +204,37 @@ const ClientPaymentCreate = ({ auth }) => {
                         <div className="flex items-center justify-end gap-4 mt-6">
                             <button
                                 type="submit"
-                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                disabled={processing}
+                                className="inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white 
+                                    bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                disabled={loading}
                             >
-                                {processing ? "Processing..." : "Pay Now"}
+                                {loading && (
+                                    <svg
+                                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                        ></path>
+                                    </svg>
+                                )}
+                                {loading ? "Processing..." : "Pay Now"}
                             </button>
+
                             <Link
-                                href={`/client/payments/${currentScheduledPayment.loan_id}`}
+                                href={`/client/payments/${paymentData.loan_id}`}
                                 className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 Cancel
@@ -191,4 +247,4 @@ const ClientPaymentCreate = ({ auth }) => {
     );
 };
 
-export default ClientPaymentCreate;
+export default PayLoan;

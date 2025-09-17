@@ -1,69 +1,11 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
+import formatCurrency from "@/Utils/formatCurrency";
+import formatDate from "@/Utils/formatDate";
 
-const ClientPaymentIndex = ({ auth }) => {
-    const currentLoan = {
-        id: 1,
-        marketing_id: "LNDMK-001",
-        principal_amount: 10000.0,
-        interest_rate: 0.05,
-        loan_term_months: 12,
-        start_date: "2024-01-01",
-    };
-
-    const currentPayments = [
-        {
-            id: 1,
-            loan_id: 1,
-            principal_amount: 816.67,
-            interest_amount: 41.67,
-            total_amount: 858.34,
-            amount_paid: 858.34,
-            due_date: "2024-02-01",
-            payment_date: "2024-01-30",
-            payment_method: "Gcash",
-            reference_no: "GCASH123",
-            is_paid: true,
-            status: "completed",
-        },
-        {
-            id: 2,
-            loan_id: 1,
-            principal_amount: 820.08,
-            interest_amount: 38.26,
-            total_amount: 858.34,
-            amount_paid: null,
-            due_date: "2024-03-01",
-            payment_date: null,
-            payment_method: null,
-            reference_no: null,
-            is_paid: false,
-            status: "pending",
-        },
-        {
-            id: 3,
-            loan_id: 1,
-            principal_amount: 823.5,
-            interest_amount: 34.84,
-            total_amount: 858.34,
-            amount_paid: null,
-            due_date: "2024-04-01",
-            payment_date: null,
-            payment_method: null,
-            reference_no: null,
-            is_paid: false,
-            status: "pending",
-        },
-    ];
-
-    const actualPayments = currentPayments.filter(
-        (p) => p.amount_paid !== null
-    );
-
-    const handlePayClick = (payment) => {
-        window.location.href = `/client/payments/create`;
-    };
+const ClientPaymentIndex = ({ auth, payments, currentLoan }) => {
+    const actualPayments = payments.filter((p) => p.amount_paid !== null);
 
     return (
         <ClientDashboardLayout auth={auth}>
@@ -78,16 +20,16 @@ const ClientPaymentIndex = ({ auth }) => {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-indigo-700">
                         <div>
-                            <strong>Principal Amount:</strong> ₱
-                            {currentLoan.principal_amount.toFixed(2)}
+                            <strong>Principal Amount:</strong>{" "}
+                            {formatCurrency(currentLoan.principal_amount)}
                         </div>
                         <div>
                             <strong>Interest Rate:</strong>{" "}
-                            {(currentLoan.interest_rate * 100).toFixed(2)}%
+                            {currentLoan.interest_rate}%
                         </div>
                         <div>
                             <strong>Loan Term:</strong>{" "}
-                            {currentLoan.loan_term_months} months
+                            {currentLoan.term_months} months
                         </div>
                     </div>
                 </div>
@@ -124,7 +66,7 @@ const ClientPaymentIndex = ({ auth }) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {currentPayments.map((item) => (
+                                {payments.map((item) => (
                                     <tr
                                         key={item.id}
                                         className={
@@ -135,32 +77,37 @@ const ClientPaymentIndex = ({ auth }) => {
                                             {item.id}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {item.due_date}
+                                            {formatDate(item.due_date)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            ₱{item.principal_amount.toFixed(2)}
+                                            {formatCurrency(
+                                                parseFloat(
+                                                    item.principal_amount
+                                                )
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            ₱{item.interest_amount.toFixed(2)}
+                                            {formatCurrency(
+                                                parseFloat(item.interest_amount)
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            ₱{item.total_amount.toFixed(2)}
+                                            {formatCurrency(
+                                                parseFloat(item.total_amount)
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {item.status}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                                            {!item.is_paid && (
-                                                <button
-                                                    onClick={() =>
-                                                        handlePayClick(item)
-                                                    }
-                                                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            {!item.is_paid ? (
+                                                <Link
+                                                    href={`/client/payments/${item.id}/pay`}
+                                                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
                                                 >
                                                     Pay
-                                                </button>
-                                            )}
-                                            {item.is_paid && (
+                                                </Link>
+                                            ) : (
                                                 <span className="text-green-600">
                                                     Paid
                                                 </span>
@@ -202,24 +149,31 @@ const ClientPaymentIndex = ({ auth }) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {actualPayments && actualPayments.length > 0 ? (
+                                {actualPayments.length > 0 ? (
                                     actualPayments.map((payment) => (
                                         <tr key={payment.id}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 {payment.id}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                ₱
-                                                {payment.amount_paid.toFixed(2)}
+                                                {formatCurrency(
+                                                    parseFloat(
+                                                        payment.amount_paid
+                                                    )
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {payment.payment_date}
+                                                {payment.payment_date
+                                                    ? formatDate(
+                                                          payment.payment_date
+                                                      )
+                                                    : "-"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {payment.payment_method}
+                                                {payment.payment_method || "-"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {payment.reference_no}
+                                                {payment.reference_no || "-"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {payment.status}

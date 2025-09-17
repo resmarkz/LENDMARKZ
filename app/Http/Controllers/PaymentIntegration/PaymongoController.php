@@ -92,12 +92,12 @@ class PaymongoController extends Controller
                     'remaining_balance' => max(0, $loan->remaining_balance - $payment->amount_paid),
                 ]);
 
-                return redirect()->route('admin.payments.index')
+                return redirect()->route('dashboard')
                     ->with('success', 'Payment successful and updated!');
             }
         }
 
-        return redirect()->route('home')
+        return redirect()->route('dashboard')
             ->with('error', "Payment status: {$status}");
     }
 

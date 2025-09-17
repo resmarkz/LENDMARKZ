@@ -53,7 +53,7 @@ const PaymentCreate = ({ auth, payment }) => {
             const attachResponse = await axios.post("/payment-attach", {
                 intent_id: intentId,
                 payment_method_id: paymentMethodId,
-                payment_id: data.scheduled_payment_id, // ✅ include payment_id
+                payment_id: data.scheduled_payment_id,
             });
 
             const checkoutUrl =

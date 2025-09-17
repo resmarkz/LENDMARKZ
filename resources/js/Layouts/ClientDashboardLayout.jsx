@@ -56,7 +56,7 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "My Payments",
                     icon: "fas fa-receipt",
-                    href: "/client/payments/1", // Assuming loan ID 1 for sample data
+                    href: `/client/${auth.user.id}/payments/`,
                 },
             ],
         },
@@ -167,7 +167,7 @@ function ClientDashboardLayout({ children }) {
                                     </span>
                                 </div>
                                 <span className="ml-2 text-gray-700">
-                                    {user?.name}
+                                    {user?.first_name} {user?.last_name}
                                 </span>
                                 <FontAwesomeIcon
                                     icon={

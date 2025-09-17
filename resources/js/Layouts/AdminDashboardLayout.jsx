@@ -288,7 +288,7 @@ function AdminDashboardLayout({ children, auth }) {
                                     </span>
                                 </div>
                                 <span className="ml-2 text-gray-700">
-                                    {user?.name}
+                                    {user?.first_name} {user?.last_name}
                                 </span>
                                 <FontAwesomeIcon
                                     icon={
