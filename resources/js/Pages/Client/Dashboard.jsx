@@ -3,9 +3,9 @@ import { Head, Link } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
 
 const ClientDashboard = ({
-    loanAmount = 60000,
-    amountPaid = 15000,
-    nextOverdue = "2025-10-17",
+    totalLoanAmount = 0,
+    totalAmountPaid = 0,
+    nextDueDate = "N/A",
 }) => {
     return (
         <ClientDashboardLayout>
@@ -22,7 +22,7 @@ const ClientDashboard = ({
                                 Loan Amount
                             </p>
                             <p className="text-3xl font-bold">
-                                ₱{loanAmount.toLocaleString()}
+                                ₱{totalLoanAmount.toLocaleString()}
                             </p>
                         </div>
                         <i className="fas fa-coins text-4xl opacity-50"></i>
@@ -34,7 +34,7 @@ const ClientDashboard = ({
                                 Amount Paid
                             </p>
                             <p className="text-3xl font-bold">
-                                ₱{amountPaid.toLocaleString()}
+                                ₱{totalAmountPaid.toLocaleString()}
                             </p>
                         </div>
                         <i className="fas fa-hand-holding-usd text-4xl opacity-50"></i>
@@ -43,15 +43,9 @@ const ClientDashboard = ({
                     <div className="bg-red-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium opacity-80">
-                                Next Overdue Date
+                                Next Due Date
                             </p>
-                            <p className="text-xl font-bold">
-                                {
-                                    new Date(nextOverdue)
-                                        .toISOString()
-                                        .split("T")[0]
-                                }
-                            </p>
+                            <p className="text-xl font-bold">{nextDueDate}</p>
                         </div>
                         <i className="fas fa-calendar-alt text-4xl opacity-50"></i>
                     </div>

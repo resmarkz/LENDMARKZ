@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\CollectorProfileController;
 use App\Http\Controllers\ContactReferenceController;
@@ -46,9 +47,7 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Profile/Edit');
     })->name('profile.edit');
     Route::prefix('client')->name('client.')->middleware("role:client")->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Client/Dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', ClientDashboardController::class)->name('dashboard');
 
         Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 
