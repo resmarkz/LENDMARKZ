@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('reference_no')->nullable();
             $table->boolean('is_paid')->default(false);
 
-            $table->string('status')->default('pending'); // pending, completed, failed, reversed
+            $table->string('status')->default('pending'); // pending, paid, overdue
 
             $table->timestamps();
 

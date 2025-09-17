@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientProfile;
+use App\Models\CollectorProfile;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +33,32 @@ class PaymentController extends Controller
 
     public function viewPaymentAdmin()
     {
+        $filters = request()->only(['client_id', 'collector_id', 'status', 'start_date', 'end_date', 'reference_no', 'loan_id']);
+
         $payments = Payment::with(['loan.clientProfile.user', 'loan.collectorProfile.user'])
+            ->when(request()->input('reference_no'), function ($query, $reference_no) {
+                $query->where('reference_no', 'like', "%{$reference_no}%");
+            })
+            ->when(request()->input('loan_id'), function ($query, $loan_id) {
+                $query->where('loan_id', $loan_id);
+            })
+            ->when(request()->input('client_id'), function ($query, $client_id) {
+                $query->whereHas('loan.clientProfile', function ($q) use ($client_id) {
+                    $q->where('id', $client_id);
+                });
+            })
+            ->when(request()->input('collector_id'), function ($query, $collector_id) {
+                $query->whereHas('loan.collectorProfile', function ($q) use ($collector_id) {
+                    $q->where('id', $collector_id);
+                });
+            })
+            ->when(request()->input('status'), function ($query, $status) {
+                if ($status === 'overdue') {
+                    $query->where('due_date', '<', now())->where('status', 'pending');
+                } else {
+                    $query->where('status', $status);
+                }
+            })
             ->get()
             ->map(fn($payment) => [
                 'id' => $payment->id,
@@ -55,7 +82,10 @@ class PaymentController extends Controller
             ]);
 
         return Inertia::render('Admin/Payments/Index', [
-            'payments' => $payments
+            'payments' => $payments,
+            'filters' => $filters,
+            'clients' => ClientProfile::with('user')->get(),
+            'collectors' => CollectorProfile::with('user')->get(),
         ]);
     }
 

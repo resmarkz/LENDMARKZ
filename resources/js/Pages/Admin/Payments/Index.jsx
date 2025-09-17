@@ -11,12 +11,17 @@ const PaymentIndex = ({
     filters = {},
     success = {},
     error = {},
+    clients = [],
+    collectors = [],
 }) => {
     const [values, setValues] = useState({
-        search: filters.search || "",
+        client_id: filters.client_id || "",
+        collector_id: filters.collector_id || "",
         status: filters.status || "",
         start_date: filters.start_date || "",
         end_date: filters.end_date || "",
+        reference_no: filters.reference_no || "",
+        loan_id: filters.loan_id || "",
     });
 
     useEffect(() => {
@@ -44,7 +49,15 @@ const PaymentIndex = ({
     };
 
     const handleClear = () => {
-        setValues({ search: "", status: "", start_date: "", end_date: "" });
+        setValues({
+            client_id: "",
+            collector_id: "",
+            status: "",
+            start_date: "",
+            end_date: "",
+            reference_no: "",
+            loan_id: "",
+        });
         router.get(
             "/admin/payments",
             {},
@@ -66,17 +79,58 @@ const PaymentIndex = ({
                     className="mb-6 p-4 bg-gray-50 rounded-lg"
                 >
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="md:col-span-2">
+                        <div className="md:col-span-1">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Search
+                                Client
+                            </label>
+                            <select
+                                name="client_id"
+                                value={values.client_id}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                            >
+                                <option value="">All</option>
+                                {clients.map((client) => (
+                                    <option key={client.id} value={client.id}>
+                                        {client.user.first_name}{" "}
+                                        {client.user.last_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="md:col-span-1">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Collector
+                            </label>
+                            <select
+                                name="collector_id"
+                                value={values.collector_id}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                            >
+                                <option value="">All</option>
+                                {collectors.map((collector) => (
+                                    <option
+                                        key={collector.id}
+                                        value={collector.id}
+                                    >
+                                        {collector.user.first_name}{" "}
+                                        {collector.user.last_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Loan ID
                             </label>
                             <input
                                 type="text"
-                                name="search"
-                                value={values.search}
+                                name="loan_id"
+                                value={values.loan_id}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                placeholder="Search by client or collector..."
+                                placeholder="Search by Loan ID..."
                             />
                         </div>
                         <div>
@@ -90,10 +144,23 @@ const PaymentIndex = ({
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                             >
                                 <option value="">All</option>
-                                <option value="completed">Completed</option>
                                 <option value="pending">Pending</option>
-                                <option value="failed">Failed</option>
+                                <option value="paid">Paid</option>
+                                <option value="overdue">Overdue</option>
                             </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Reference No
+                            </label>
+                            <input
+                                type="text"
+                                name="reference_no"
+                                value={values.reference_no}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                placeholder="Search by reference no..."
+                            />
                         </div>
                         <div className="flex items-end space-x-2">
                             <button
