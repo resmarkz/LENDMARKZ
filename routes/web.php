@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientProfileController;
@@ -76,9 +77,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('admin')->name('admin.')->middleware("role:admin")->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', AdminDashboardController::class)->name('dashboard');
 
         Route::prefix('loans')->name('loans.')->group(function () {
             Route::get('/', [LoanController::class, 'index'])->name('index');
