@@ -26,7 +26,22 @@ class AdminDashboardController extends Controller
         $totalAmountOverdue = Loan::where('due_date', '<', now())->where('status', 'pending')->sum('total_payable');
 
         $recentLoans = Loan::with('clientProfile.user')->latest()->take(5)->get();
-        $recentPayments = Payment::with('loan.clientProfile.user')->latest()->take(5)->get();
+        $recentPayments = Payment::with('loan.clientProfile.user')->where('status', 'paid')->latest()->take(5)->get()
+            ->map(function ($payment) {
+                return [
+                    'id' => $payment->id,
+                    'loan' => [
+                        'client_profile' => [
+                            'user' => [
+                                'first_name' => $payment->loan->clientProfile->user->first_name,
+                                'last_name' => $payment->loan->clientProfile->user->last_name,
+                            ]
+                        ]
+                    ],
+                    'amount_paid' => $payment->amount_paid,
+                    'payment_date' => $payment->payment_date->format('Y-m-d'),
+                ];
+            });
 
         return Inertia::render('Admin/Dashboard', [
             'totalClients' => $totalClients,
