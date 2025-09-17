@@ -4,10 +4,11 @@ import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import formatCurrency from "@/utils/formatCurrency";
 import successHandler from "@/utils/successHandler";
 import errorHandler from "@/utils/errorHandler";
+import Pagination from "@/Components/Pagination";
 
 const PaymentIndex = ({
     auth,
-    payments = [],
+    payments,
     filters = {},
     success = {},
     error = {},
@@ -250,8 +251,8 @@ const PaymentIndex = ({
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {payments.length > 0 ? (
-                                payments.map((payment) => (
+                            {payments.data.length > 0 ? (
+                                payments.data.map((payment) => (
                                     <tr key={payment.id}>
                                         <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                             {payment.id}
@@ -260,12 +261,24 @@ const PaymentIndex = ({
                                             {payment.loan_id}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
-                                            {payment.client_first_name}{" "}
-                                            {payment.client_last_name}
+                                            {
+                                                payment.loan.client_profile.user
+                                                    .first_name
+                                            }{" "}
+                                            {
+                                                payment.loan.client_profile.user
+                                                    .last_name
+                                            }
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
-                                            {payment.collector_first_name}{" "}
-                                            {payment.collector_last_name}
+                                            {
+                                                payment.loan.collector_profile
+                                                    .user.first_name
+                                            }{" "}
+                                            {
+                                                payment.loan.collector_profile
+                                                    .user.last_name
+                                            }
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
                                             {formatCurrency(
@@ -329,6 +342,10 @@ const PaymentIndex = ({
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="mt-6">
+                    <Pagination links={payments.links} />
                 </div>
             </div>
         </AdminDashboardLayout>
