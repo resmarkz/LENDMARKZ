@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import Pagination from "@/Components/Pagination";
 
 const CollectorIndex = ({ auth, collectors }) => {
     return (
@@ -72,7 +73,7 @@ const CollectorIndex = ({ auth, collectors }) => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {collectors.map((collector) => (
+                            {collectors.data.map((collector) => (
                                 <tr key={collector.id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {collector.id}
@@ -127,6 +128,9 @@ const CollectorIndex = ({ auth, collectors }) => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="mt-6">
+                    <Pagination links={collectors.links} />
                 </div>
             </div>
         </AdminDashboardLayout>

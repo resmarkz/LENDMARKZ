@@ -16,7 +16,7 @@ class AdminProfileController extends Controller
      */
     public function index()
     {
-        $admins = User::where('role', 'admin')->get();
+        $admins = User::where('role', 'admin')->paginate(10);
         $admins->load('adminProfile');
 
         return Inertia::render('Admin/ManageUsers/Admins/Index', [

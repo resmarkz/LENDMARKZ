@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
+import Pagination from "@/Components/Pagination";
 
 const AdminIndex = ({ auth, admins }) => {
     return (
@@ -54,7 +55,7 @@ const AdminIndex = ({ auth, admins }) => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {admins.map((admin) => (
+                            {admins.data.map((admin) => (
                                 <tr key={admin.id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {admin.id}
@@ -96,6 +97,9 @@ const AdminIndex = ({ auth, admins }) => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="mt-6">
+                    <Pagination links={admins.links} />
                 </div>
             </div>
         </AdminDashboardLayout>

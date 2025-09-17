@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import formatCurrency from "@/utils/formatCurrency";
+import Pagination from "@/Components/Pagination";
 
 const LoanIndex = ({ auth, loans, filters, collectors }) => {
     const [values, setValues] = useState({
@@ -395,6 +396,10 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="mt-6">
+                    <Pagination links={loans.links} />
                 </div>
             </div>
         </AdminDashboardLayout>

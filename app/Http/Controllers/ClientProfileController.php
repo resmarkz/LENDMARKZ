@@ -16,7 +16,7 @@ class ClientProfileController extends Controller
      */
     public function index()
     {
-        $clients = User::where('role', 'client')->get();
+        $clients = User::where('role', 'client')->paginate(10);
         $clients->load('clientProfile');
         return Inertia::render('Admin/ManageUsers/Clients/Index', [
             'clients' => $clients,

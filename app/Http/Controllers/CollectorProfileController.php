@@ -16,7 +16,7 @@ class CollectorProfileController extends Controller
      */
     public function index()
     {
-        $collectors = User::where('role', 'collector')->get();
+        $collectors = User::where('role', 'collector')->paginate(10);
         $collectors->load('collectorProfile');
         return Inertia::render('Admin/ManageUsers/Collectors/Index', [
             'collectors' => $collectors,
