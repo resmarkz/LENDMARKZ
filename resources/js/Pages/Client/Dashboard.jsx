@@ -2,7 +2,11 @@ import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
 
-const ClientDashboard = () => {
+const ClientDashboard = ({
+    loanAmount = 60000,
+    amountPaid = 15000,
+    nextOverdue = "2025-10-17",
+}) => {
     return (
         <ClientDashboardLayout>
             <Head title="Client Dashboard" />
@@ -11,37 +15,42 @@ const ClientDashboard = () => {
                     Welcome, Client!
                 </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    {/* Summary Card 1: Total Loans */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div className="bg-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium opacity-80">
-                                My Active Loans
+                                Loan Amount
                             </p>
-                            <p className="text-3xl font-bold">2</p>
+                            <p className="text-3xl font-bold">
+                                ₱{loanAmount.toLocaleString()}
+                            </p>
+                        </div>
+                        <i className="fas fa-coins text-4xl opacity-50"></i>
+                    </div>
+
+                    <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium opacity-80">
+                                Amount Paid
+                            </p>
+                            <p className="text-3xl font-bold">
+                                ₱{amountPaid.toLocaleString()}
+                            </p>
                         </div>
                         <i className="fas fa-hand-holding-usd text-4xl opacity-50"></i>
                     </div>
 
-                    {/* Summary Card 2: Total Payments Made */}
-                    <div className="bg-purple-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-medium opacity-80">
-                                Total Payments Made
-                            </p>
-                            <p className="text-3xl font-bold">$1,500.00</p>
-                        </div>
-                        <i className="fas fa-money-bill-wave text-4xl opacity-50"></i>
-                    </div>
-
-                    {/* Summary Card 3: Next Payment Due */}
                     <div className="bg-red-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium opacity-80">
-                                Next Payment Due
+                                Next Overdue Date
                             </p>
                             <p className="text-xl font-bold">
-                                $250.00 (2025-10-01)
+                                {
+                                    new Date(nextOverdue)
+                                        .toISOString()
+                                        .split("T")[0]
+                                }
                             </p>
                         </div>
                         <i className="fas fa-calendar-alt text-4xl opacity-50"></i>

@@ -27,22 +27,23 @@ const Home = ({ auth }) => {
 
     return (
         <Layout auth={auth}>
-            <div className="min-h-screen bg-gray-100 text-gray-800">
+            <div className="min-h-screen bg-gray-50 text-gray-800">
                 <Head title="Welcome to Lendmarkz" />
 
                 {/* Hero Section */}
-                <section className="bg-blue-600 text-white text-center py-20">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-5xl font-bold mb-4">
+                <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-center py-24 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10 bg-pattern"></div>
+                    <div className="container mx-auto px-6 relative z-10">
+                        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
                             Your Trusted Lending Partner
-                        </h2>
-                        <p className="text-xl mb-8">
-                            Providing fast, reliable, and secure loans to help
+                        </h1>
+                        <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto opacity-90">
+                            Fast, reliable, and secure loans tailored to help
                             you achieve your goals.
                         </p>
                         <a
                             href={getStartedUrl}
-                            className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200"
+                            className="bg-white text-indigo-600 font-semibold py-3 px-10 rounded-full shadow-md hover:bg-gray-100 transition"
                         >
                             Get Started
                         </a>
@@ -52,49 +53,70 @@ const Home = ({ auth }) => {
                 {/* Features Section */}
                 <section className="py-20">
                     <div className="container mx-auto px-6">
-                        <h3 className="text-4xl font-bold text-center mb-12">
+                        <h2 className="text-4xl font-bold text-center mb-14 text-gray-800">
                             Why Choose Lendmarkz?
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                            <div className="text-center">
-                                <FaHandshake className="text-5xl text-blue-600 mx-auto mb-4" />
-                                <h4 className="text-2xl font-bold mb-2">
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                            <div className="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition text-center">
+                                <FaHandshake className="text-5xl text-indigo-600 mx-auto mb-4" />
+                                <h3 className="text-2xl font-bold mb-2">
                                     Easy Application
-                                </h4>
+                                </h3>
                                 <p className="text-gray-600">
-                                    Our streamlined application process makes
-                                    getting a loan simple and hassle-free.
+                                    A streamlined process that makes applying
+                                    for a loan simple and stress-free.
                                 </p>
                             </div>
-                            <div className="text-center">
-                                <FaChartLine className="text-5xl text-blue-600 mx-auto mb-4" />
-                                <h4 className="text-2xl font-bold mb-2">
+                            <div className="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition text-center">
+                                <FaChartLine className="text-5xl text-indigo-600 mx-auto mb-4" />
+                                <h3 className="text-2xl font-bold mb-2">
                                     Competitive Rates
-                                </h4>
+                                </h3>
                                 <p className="text-gray-600">
-                                    We offer competitive interest rates to
-                                    ensure you get the best value for your loan.
+                                    Enjoy fair and transparent interest rates
+                                    that give you real value.
                                 </p>
                             </div>
-                            <div className="text-center">
-                                <FaShieldAlt className="text-5xl text-blue-600 mx-auto mb-4" />
-                                <h4 className="text-2xl font-bold mb-2">
+                            <div className="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition text-center">
+                                <FaShieldAlt className="text-5xl text-indigo-600 mx-auto mb-4" />
+                                <h3 className="text-2xl font-bold mb-2">
                                     Secure & Confidential
-                                </h4>
+                                </h3>
                                 <p className="text-gray-600">
-                                    Your data is protected with bank-level
-                                    security, ensuring your privacy and peace of
-                                    mind.
+                                    Bank-level security to protect your data and
+                                    give you peace of mind.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                {/* Call to Action Section */}
+                <section className="bg-indigo-600 text-white py-16 text-center">
+                    <div className="container mx-auto px-6">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                            Ready to achieve your financial goals?
+                        </h2>
+                        <p className="text-lg mb-8 opacity-90">
+                            Join thousands of clients who trust Lendmarkz with
+                            their lending needs.
+                        </p>
+                        <a
+                            href={getStartedUrl}
+                            className="bg-white text-indigo-600 font-semibold py-3 px-8 rounded-full shadow hover:bg-gray-100 transition"
+                        >
+                            Apply Now
+                        </a>
+                    </div>
+                </section>
+
                 {/* Footer */}
-                <footer className="bg-gray-800 text-white py-8">
+                <footer className="bg-gray-900 text-gray-300 py-8">
                     <div className="container mx-auto px-6 text-center">
-                        <p>&copy; 2025 Lendmarkz. All rights reserved.</p>
+                        <p className="text-sm">
+                            &copy; {new Date().getFullYear()} Lendmarkz. All
+                            rights reserved.
+                        </p>
                     </div>
                 </footer>
             </div>

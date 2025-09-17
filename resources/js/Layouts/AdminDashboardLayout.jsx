@@ -97,23 +97,23 @@ function AdminDashboardLayout({ children, auth }) {
     };
 
     return (
-        <div className="h-screen min-h-screen bg-gray-50 grid grid-cols-1 lg:grid-cols-[auto_1fr] grid-rows-[auto_1fr] overflow-hidden">
+        <div className="h-screen bg-gray-100 grid grid-cols-1 lg:grid-cols-[auto_1fr] grid-rows-[auto_1fr] overflow-hidden">
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
+                    className="fixed inset-0 z-30 bg-black/40 lg:hidden"
                     onClick={() => setSidebarOpen(false)}
                 ></div>
             )}
 
             <aside
-                className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-md transform transition-transform duration-200 ease-in-out ${
+                className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-gray-900 text-gray-200 shadow-xl transform transition-transform duration-200 ease-in-out ${
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 } lg:translate-x-0 lg:col-start-1 lg:row-span-2`}
             >
-                <div className="h-16 px-4 flex items-center justify-between border-b border-gray-200">
-                    <a href="/" className="text-indigo-600 font-bold text-xl">
+                <div className="h-16 px-6 flex items-center justify-between border-b border-gray-800">
+                    <span className="text-indigo-400 font-extrabold text-xl tracking-wide">
                         LENDMARK
-                    </a>
+                    </span>
                     <button
                         className="text-gray-400 lg:hidden"
                         onClick={() => setSidebarOpen(false)}
@@ -122,14 +122,14 @@ function AdminDashboardLayout({ children, auth }) {
                     </button>
                 </div>
 
-                <div className="h-[calc(100%-4rem)] overflow-y-auto py-4">
+                <div className="h-[calc(100%-4rem)] overflow-y-auto py-6">
                     <nav className="space-y-6">
                         {sidebarLinks.map((group) => (
-                            <div key={group.group} className="space-y-1">
-                                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <div key={group.group} className="px-4">
+                                <h3 className="px-2 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                     {group.group}
                                 </h3>
-                                <div className="mt-2 space-y-1">
+                                <div className="space-y-2">
                                     {group.links.map((link) => (
                                         <div key={link.name}>
                                             {link.subLinks ? (
@@ -140,27 +140,18 @@ function AdminDashboardLayout({ children, auth }) {
                                                                 link.name
                                                             )
                                                         }
-                                                        className={`flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium rounded-md cursor-pointer ${
+                                                        className={`flex items-center justify-between w-full px-4 py-2 rounded-lg transition-all ${
                                                             isActiveLink(
                                                                 link.href,
                                                                 link.subLinks
                                                             )
-                                                                ? "bg-indigo-50 text-indigo-700"
-                                                                : "text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
+                                                                ? "bg-indigo-600 text-white shadow-md"
+                                                                : "hover:bg-gray-800 hover:text-white"
                                                         }`}
                                                     >
                                                         <div className="flex items-center">
                                                             <i
-                                                                className={`${
-                                                                    link.icon
-                                                                } mr-3 ${
-                                                                    isActiveLink(
-                                                                        link.href,
-                                                                        link.subLinks
-                                                                    )
-                                                                        ? "text-indigo-500"
-                                                                        : "text-gray-400"
-                                                                }`}
+                                                                className={`${link.icon} mr-3`}
                                                             ></i>
                                                             {link.name}
                                                         </div>
@@ -186,7 +177,7 @@ function AdminDashboardLayout({ children, auth }) {
                                                             link.href,
                                                             link.subLinks
                                                         )) && (
-                                                        <div className="ml-10 mt-1 space-y-1 pl-2 border-l-2 border-gray-100">
+                                                        <div className="ml-8 mt-2 space-y-1 border-l border-gray-700 pl-3">
                                                             {link.subLinks.map(
                                                                 (subLink) => (
                                                                     <Link
@@ -196,16 +187,16 @@ function AdminDashboardLayout({ children, auth }) {
                                                                         href={
                                                                             subLink.href
                                                                         }
-                                                                        className={`flex items-center px-4 py-2 text-sm rounded-md ${
+                                                                        className={`flex items-center px-3 py-2 text-sm rounded-md transition ${
                                                                             isActiveLink(
                                                                                 subLink.href
                                                                             )
-                                                                                ? "bg-indigo-100 text-indigo-700"
-                                                                                : "text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
+                                                                                ? "bg-indigo-500 text-white"
+                                                                                : "text-gray-400 hover:text-white hover:bg-gray-800"
                                                                         }`}
                                                                     >
                                                                         <i
-                                                                            className={`${subLink.icon} mr-3 text-gray-400`}
+                                                                            className={`${subLink.icon} mr-2`}
                                                                         ></i>
                                                                         {
                                                                             subLink.name
@@ -219,24 +210,14 @@ function AdminDashboardLayout({ children, auth }) {
                                             ) : (
                                                 <Link
                                                     href={link.href}
-                                                    method={link.method}
-                                                    as={link.as}
-                                                    className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md ${
+                                                    className={`flex items-center px-4 py-2 rounded-lg transition ${
                                                         isActiveLink(link.href)
-                                                            ? "bg-indigo-50 text-indigo-700"
-                                                            : "text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
+                                                            ? "bg-indigo-600 text-white shadow-md"
+                                                            : "text-gray-400 hover:text-white hover:bg-gray-800"
                                                     }`}
                                                 >
                                                     <i
-                                                        className={`${
-                                                            link.icon
-                                                        } mr-3 ${
-                                                            isActiveLink(
-                                                                link.href
-                                                            )
-                                                                ? "text-indigo-500"
-                                                                : "text-gray-400"
-                                                        }`}
+                                                        className={`${link.icon} mr-3`}
                                                     ></i>
                                                     {link.name}
                                                 </Link>
@@ -250,63 +231,54 @@ function AdminDashboardLayout({ children, auth }) {
                 </div>
             </aside>
 
-            <header className="sticky top-0 h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 lg:px-8 z-20 col-start-1 lg:col-start-2 col-span-1">
+            <header className="sticky top-0 h-16 bg-white shadow-sm flex items-center justify-between px-6 z-20 col-start-1 lg:col-start-2 col-span-1">
                 <button
                     type="button"
-                    className="text-gray-400 lg:hidden"
+                    className="text-gray-500 lg:hidden"
                     onClick={() => setSidebarOpen(true)}
                 >
-                    <i className="fas fa-bars"></i>
+                    <i className="fas fa-bars text-lg"></i>
                 </button>
 
-                <div className="flex-1"></div>
+                <h1 className="text-lg font-semibold text-gray-700">
+                    Admin Dashboard
+                </h1>
 
                 <div className="flex items-center space-x-4">
-                    <button className="text-gray-500 hover:text-gray-700">
+                    <button className="text-gray-500 hover:text-indigo-600 transition">
                         <i className="fas fa-bell"></i>
                     </button>
-                    <div
-                        className="relative inline-block text-left"
-                        ref={userDropdownRef}
-                    >
-                        <div>
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setUserDropdownOpen(!userDropdownOpen)
+                    <div className="relative" ref={userDropdownRef}>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setUserDropdownOpen(!userDropdownOpen)
+                            }
+                            className="flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition"
+                        >
+                            <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white">
+                                {user?.first_name.charAt(0).toUpperCase()}
+                                {user?.last_name.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="hidden sm:inline text-gray-800 font-medium">
+                                {user?.first_name}
+                            </span>
+                            <FontAwesomeIcon
+                                icon={
+                                    userDropdownOpen
+                                        ? faChevronUp
+                                        : faChevronDown
                                 }
-                                className="inline-flex w-full justify-center items-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                            >
-                                <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <span className="text-indigo-600 font-medium">
-                                        {user?.first_name
-                                            .charAt(0)
-                                            .toUpperCase()}{" "}
-                                        {user?.last_name
-                                            .charAt(0)
-                                            .toUpperCase()}
-                                    </span>
-                                </div>
-                                <span className="ml-2 text-gray-700">
-                                    {user?.first_name} {user?.last_name}
-                                </span>
-                                <FontAwesomeIcon
-                                    icon={
-                                        userDropdownOpen
-                                            ? faChevronUp
-                                            : faChevronDown
-                                    }
-                                    className="ml-2 h-4 w-4 text-gray-400"
-                                />
-                            </button>
-                        </div>
+                                className="ml-1 h-4 w-4 text-gray-400"
+                            />
+                        </button>
 
                         {userDropdownOpen && (
-                            <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="absolute right-0 mt-2 w-44 rounded-lg bg-white shadow-lg ring-1 ring-black/5">
                                 <div className="py-1">
                                     <Link
                                         href="/profile"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                                     >
                                         Profile
                                     </Link>
@@ -314,7 +286,7 @@ function AdminDashboardLayout({ children, auth }) {
                                         href="/logout"
                                         method="post"
                                         as="button"
-                                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                                     >
                                         Sign out
                                     </Link>
@@ -325,8 +297,8 @@ function AdminDashboardLayout({ children, auth }) {
                 </div>
             </header>
 
-            <main className="overflow-auto bg-white col-start-1 lg:col-start-2">
-                <div className="py-6 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+            <main className="overflow-auto bg-gray-50 col-start-1 lg:col-start-2">
+                <div className="py-8 px-6 lg:px-10 min-h-[calc(100vh-4rem)]">
                     {children}
                 </div>
             </main>
