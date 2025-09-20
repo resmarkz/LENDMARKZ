@@ -55,7 +55,7 @@ function ClientDashboardLayout({ children }) {
                 {
                     name: "My Payments",
                     icon: "fas fa-wallet",
-                    href: `/client/${auth.user.id}/payments/`,
+                    href: "/client/payments",
                 },
             ],
         },
@@ -170,7 +170,7 @@ function ClientDashboardLayout({ children }) {
                             <div className="absolute right-0 mt-2 w-44 rounded-lg bg-white shadow-lg ring-1 ring-black/5">
                                 <div className="py-1">
                                     <Link
-                                        href="/profile"
+                                        href="/client/profile"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition"
                                     >
                                         Profile

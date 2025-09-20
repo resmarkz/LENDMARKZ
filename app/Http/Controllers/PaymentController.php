@@ -24,10 +24,12 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
         return match ($this->userRole) {
             'admin' => $this->viewPaymentAdmin(),
+            'client' => $this->viewPaymentClient($user),
             'collector' => "",
-            'client' => "",
             default => abort(403, 'Unauthorized action.'),
         };
     }
@@ -67,6 +69,24 @@ class PaymentController extends Controller
             'filters' => $filters,
             'clients' => ClientProfile::with('user')->get(),
             'collectors' => CollectorProfile::with('user')->get(),
+        ]);
+    }
+
+    public function viewPaymentClient(User $client)
+    {
+        $client->load('clientProfile.loans.payments');
+        $currentLoan = $client->clientProfile->loans->where('status', 'active')->first();
+
+        $currentLoanData = [
+            "id" => $currentLoan->id,
+            "principal_amount" => $currentLoan->principal_amount,
+            "interest_rate" => $currentLoan->interest_rate,
+            "term_months" => $currentLoan->term_months,
+        ];
+
+        return Inertia::render('Client/Payments/Index', [
+            'currentLoan' => $currentLoanData,
+            'payments' => $currentLoan->payments,
         ]);
     }
 
@@ -157,33 +177,7 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $client)
-    {
-        return match ($this->userRole) {
-            'client' => $this->viewShowPaymentAdmin($client),
-            'admin' => "",
-            'collector' => "",
-            default => abort(403, 'Unauthorized action.'),
-        };
-    }
-
-    public function viewShowPaymentAdmin(User $client)
-    {
-        $client->load('clientProfile.loans.payments');
-        $currentLoan = $client->clientProfile->loans->where('status', 'active')->first();
-
-        $currentLoanData = [
-            "id" => $currentLoan->id,
-            "principal_amount" => $currentLoan->principal_amount,
-            "interest_rate" => $currentLoan->interest_rate,
-            "term_months" => $currentLoan->term_months,
-        ];
-
-        return Inertia::render('Client/Payments/Index', [
-            'currentLoan' => $currentLoanData,
-            'payments' => $currentLoan->payments,
-        ]);
-    }
+    public function show(User $client) {}
 
     /**
      * Show the form for editing the specified resource.
