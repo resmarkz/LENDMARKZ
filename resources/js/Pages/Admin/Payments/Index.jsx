@@ -5,6 +5,7 @@ import formatCurrency from "@/utils/formatCurrency";
 import successHandler from "@/utils/successHandler";
 import errorHandler from "@/utils/errorHandler";
 import Pagination from "@/Components/Pagination";
+import formatDate from "@/utils/formatDate";
 
 const PaymentIndex = ({
     auth,
@@ -303,10 +304,14 @@ const PaymentIndex = ({
                                                 : "—"}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
-                                            {payment.due_date}
+                                            {formatDate(payment.due_date)}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
-                                            {payment.payment_date || "—"}
+                                            {payment.payment_date
+                                                ? formatDate(
+                                                      payment.payment_date
+                                                  )
+                                                : "—"}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500">
                                             {payment.reference_no || "—"}

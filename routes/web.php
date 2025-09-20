@@ -33,12 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment-attach', [PaymongoController::class, 'attachMethod']);
     Route::get('/payment/verify', [PaymongoController::class, 'verify'])->name('paymongo.verify');
     Route::post('/payment-method', [PaymongoController::class, 'createPaymentMethod']);
+    // End Paymongo Routes
 
     Route::get('/dashboard', function () {
         return match (Auth::user()->role) {
-            'admin' => Inertia::render('Admin/Dashboard'),
-            'client' => Inertia::render('Client/Dashboard'),
-            'collector' => Inertia::render('Collector/Dashboard'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'client' => redirect()->route('client.dashboard'),
+            'collector' => redirect()->route('collector.dashboard'),
             default => abort(403, 'Unauthorized action.'),
         };
     })->name('dashboard');
