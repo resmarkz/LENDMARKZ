@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+    faChevronDown,
+    faChevronUp,
+    faUser,
+    faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ClientDashboardLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -171,16 +176,24 @@ function ClientDashboardLayout({ children }) {
                                 <div className="py-1">
                                     <Link
                                         href="/client/profile"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition"
+                                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition"
                                     >
+                                        <FontAwesomeIcon
+                                            icon={faUser}
+                                            className="h-4 w-4 text-indigo-500"
+                                        />
                                         Profile
                                     </Link>
                                     <Link
                                         href="/logout"
                                         method="post"
                                         as="button"
-                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition"
+                                        className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition"
                                     >
+                                        <FontAwesomeIcon
+                                            icon={faRightFromBracket}
+                                            className="h-4 w-4 text-red-500"
+                                        />
                                         Sign out
                                     </Link>
                                 </div>

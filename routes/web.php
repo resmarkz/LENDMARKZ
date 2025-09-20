@@ -60,6 +60,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/payments/{payment}/pay', [PaymentController::class, 'create'])->name('payments.pay');
 
         Route::get('/loans/{loan}', [LoanController::class, 'show'])->name('loans.show');
+
+        Route::get('/profile', [ClientProfileController::class, 'showClientProfile'])->name('profile.show');
+        Route::post('/profile', [ClientProfileController::class, 'updateClientProfile'])->name('profile.update');
+        Route::post('/password', [ClientProfileController::class, 'updateClientPassword'])->name('password.update');
     });
 
     Route::prefix('admin')->name('admin.')->middleware("role:admin")->group(function () {

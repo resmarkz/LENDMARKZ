@@ -1,13 +1,27 @@
 import Swal from "sweetalert2";
 
 export default function successHandler(success) {
-    const successKeys = Object.keys(success);
-    if (successKeys.length > 0) {
-        const successMessages = successKeys.map((key) => success[key]);
+    if (!success) return;
+
+    if (typeof success === "string") {
         Swal.fire({
             icon: "success",
             title: "Success!",
-            html: successMessages.join("<br>"),
+            text: success,
+            showConfirmButton: false,
+            timer: 2000,
+        });
+        return;
+    }
+    const successKeys = Object.keys(success);
+    if (successKeys.length > 0) {
+        const successMessages = successKeys
+            .map((key) => success[key])
+            .join("\n");
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: successMessages,
             showConfirmButton: false,
             timer: 2000,
         });

@@ -2,15 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientProfile;
 use App\Models\User;
-use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ClientProfileController extends Controller
 {
+    public function showClientProfile()
+    {
+        $client = Auth::user();
+        $client->load('clientProfile');
+        return Inertia::render('Client/Profile/Show', [
+            'client' => $client,
+        ]);
+    }
+
+    public function updateClientProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        $user->update($validatedData);
+
+        return back()->with('success', 'Profile updated.');
+    }
+
+    public function updateClientPassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $validatedData = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'min:8', 'confirmed'],
+        ]);
+
+        $user->update([
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        return back()->with('success', 'Password updated.');
+    }
+
     /**
      * Display a listing of the resource.
      */
