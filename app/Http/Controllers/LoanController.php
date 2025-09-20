@@ -171,19 +171,28 @@ class LoanController extends Controller
 
     private function handleClientStore(Request $request)
     {
+        // Check if client already has a pending or active loan
+        $client = Auth::user();
+        $existingLoan = $client->clientProfile->loans()
+            ->whereIn('status', ['pending', 'active'])
+            ->first();
+        if ($existingLoan) {
+            return redirect()->route('client.loans.index')
+                ->with('error', 'You already have a pending or active loan application.');
+        }
         $validatedData = $request->validate([
             'principal_amount' => 'required|numeric|min:0',
             'term_months'      => 'required|integer|min:1',
         ]);
 
         $interestRate = match ($validatedData['term_months']) {
-            6  => 12.0,
-            12 => 15.0,
-            18 => 20.0,
-            24 => 25.0,
-            36 => 30.0,
-            48 => 35.0,
-            default => 45.0,
+            "6"  => 12.0,
+            "12" => 15.0,
+            "18" => 20.0,
+            "24" => 25.0,
+            "36" => 30.0,
+            "48" => 35.0,
+            default => 45.0
         };
 
         $computed = $this->computeFields(

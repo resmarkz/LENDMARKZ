@@ -75,7 +75,16 @@ class PaymentController extends Controller
     public function viewPaymentClient(User $client)
     {
         $client->load('clientProfile.loans.payments');
+
+        if ($client->clientProfile->loans->isEmpty()) {
+            return redirect()->route('client.loans.index')->with('error', 'You do not have any loans yet. Please apply for a loan first.');
+        }
+
         $currentLoan = $client->clientProfile->loans->where('status', 'active')->first();
+
+        if (!$currentLoan) {
+            return redirect()->route('client.loans.index')->with('error', 'You do not have an active loan at the moment.');
+        }
 
         $currentLoanData = [
             "id" => $currentLoan->id,

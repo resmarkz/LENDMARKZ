@@ -7,6 +7,7 @@ import {
     faUser,
     faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import { successHandler, errorHandler } from "@/Utils/alertsHandler";
 
 function ClientDashboardLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,9 +15,22 @@ function ClientDashboardLayout({ children }) {
     const userDropdownRef = useRef(null);
     const {
         url,
-        props: { auth },
+        props: { auth, flash, errors },
     } = usePage();
     const user = auth?.user;
+
+    useEffect(() => {
+        if (flash?.success) {
+            successHandler(flash.success);
+        }
+        if (flash?.error) {
+            errorHandler(flash.error);
+        }
+    }, [flash]);
+
+    useEffect(() => {
+        errorHandler(errors);
+    }, [errors]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

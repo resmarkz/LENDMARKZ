@@ -4,11 +4,18 @@ namespace App\Http\Controllers\PaymentIntegration;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class PaymongoController extends Controller
 {
+    private $userRole;
+    public function __construct()
+    {
+        $this->userRole = Auth::user()->role;
+    }
+
     public function createIntent(Request $request)
     {
         $validated = $request->validate([
@@ -36,13 +43,12 @@ class PaymongoController extends Controller
         $validated = $request->validate([
             'intent_id' => 'required|string',
             'payment_method_id' => 'required|string',
-            'payment_id' => 'required|integer', // your Payment record
+            'payment_id' => 'required|integer',
         ]);
 
         $intentId = $validated['intent_id'];
         $paymentId = $validated['payment_id'];
 
-        // Build return_url with payment_id included
         $returnUrl = route('paymongo.verify', [
             'payment_intent_id' => $intentId,
             'payment_id' => $paymentId,
@@ -92,13 +98,21 @@ class PaymongoController extends Controller
                     'remaining_balance' => max(0, $loan->remaining_balance - $payment->amount_paid),
                 ]);
 
-                return redirect()->route('dashboard')
-                    ->with('success', 'Payment successful and updated!');
+                return match ($this->userRole) {
+                    'admin' => redirect()->route('admin.payments.index')->with('success', 'Payment successful and updated!'),
+                    'client' => redirect()->route('client.payments.index')->with('success', 'Payment successful and updated!'),
+                    'collector' => "",
+                    default => route('dashboard'),
+                };
             }
         }
 
-        return redirect()->route('dashboard')
-            ->with('error', "Payment status: {$status}");
+        return match ($this->userRole) {
+            'admin' => redirect()->route('admin.payments.index')->with('error', "Payment status: {$status}"),
+            'client' => redirect()->route('client.payments.index')->with('error', "Payment status: {$status}"),
+            'collector' => "",
+            default => route('dashboard'),
+        };
     }
 
     public function createPaymentMethod(Request $request)

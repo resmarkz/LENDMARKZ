@@ -1,8 +1,6 @@
 import React from "react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
 import { useForm } from "@inertiajs/react";
-import successHandler from "@/Utils/successHandler";
-import errorHandler from "@/Utils/errorHandler";
 
 export default function Show({ auth, client }) {
     const { user } = auth;
@@ -34,14 +32,6 @@ export default function Show({ auth, client }) {
         e.preventDefault();
         postProfile("/client/profile", {
             preserveScroll: true,
-            onSuccess: (page) => {
-                if (page.props?.flash?.success) {
-                    successHandler(page.props.flash.success);
-                }
-            },
-            onError: (errors) => {
-                errorHandler(errors);
-            },
         });
     };
 
@@ -49,15 +39,7 @@ export default function Show({ auth, client }) {
         e.preventDefault();
         postPassword("/client/password", {
             preserveScroll: true,
-            onSuccess: (page) => {
-                reset();
-                if (page.props?.flash?.success) {
-                    successHandler(page.props.flash.success);
-                }
-            },
-            onError: (errors) => {
-                errorHandler(errors);
-            },
+            onSuccess: () => reset(),
         });
     };
 

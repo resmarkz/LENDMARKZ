@@ -6,12 +6,13 @@ import formatDate from "@/Utils/formatDate";
 
 const ClientPaymentIndex = ({ auth, payments, currentLoan }) => {
     const actualPayments = payments.filter((p) => p.amount_paid !== null);
+    console.log(currentLoan);
 
     return (
         <ClientDashboardLayout auth={auth}>
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">
-                    Loan Payment Details: {currentLoan.marketing_id}
+                    Loan Payment Details
                 </h1>
 
                 <div className="mb-8 p-6 bg-indigo-50 rounded-lg shadow-inner">
@@ -66,55 +67,72 @@ const ClientPaymentIndex = ({ auth, payments, currentLoan }) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {payments.map((item) => (
-                                    <tr
-                                        key={item.id}
-                                        className={
-                                            item.is_paid ? "bg-green-50" : ""
-                                        }
-                                    >
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {item.id}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {formatDate(item.due_date)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {formatCurrency(
-                                                parseFloat(
-                                                    item.principal_amount
-                                                )
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {formatCurrency(
-                                                parseFloat(item.interest_amount)
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {formatCurrency(
-                                                parseFloat(item.total_amount)
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {item.status}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                                            {!item.is_paid ? (
-                                                <Link
-                                                    href={`/client/payments/${item.id}/pay`}
-                                                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
-                                                >
-                                                    Pay
-                                                </Link>
-                                            ) : (
-                                                <span className="text-green-600">
-                                                    Paid
-                                                </span>
-                                            )}
+                                {payments.length > 0 ? (
+                                    payments.map((item) => (
+                                        <tr
+                                            key={item.id}
+                                            className={
+                                                item.is_paid
+                                                    ? "bg-green-50"
+                                                    : ""
+                                            }
+                                        >
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                {item.id}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {formatDate(item.due_date)}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {formatCurrency(
+                                                    parseFloat(
+                                                        item.principal_amount
+                                                    )
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {formatCurrency(
+                                                    parseFloat(
+                                                        item.interest_amount
+                                                    )
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {formatCurrency(
+                                                    parseFloat(
+                                                        item.total_amount
+                                                    )
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {item.status}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                                {!item.is_paid ? (
+                                                    <Link
+                                                        href={`/client/payments/${item.id}/pay`}
+                                                        className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                                                    >
+                                                        Pay
+                                                    </Link>
+                                                ) : (
+                                                    <span className="text-green-600">
+                                                        Paid
+                                                    </span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td
+                                            colSpan="7"
+                                            className="px-6 py-4 text-center text-sm text-gray-500"
+                                        >
+                                            No scheduled payments found.
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -175,8 +193,10 @@ const ClientPaymentIndex = ({ auth, payments, currentLoan }) => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {payment.reference_no || "-"}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {payment.status}
+                                            <td className="px-6 py-4 whitespace-nowrap text-left text-sm">
+                                                <span className="text-green-600">
+                                                    Paid
+                                                </span>
                                             </td>
                                         </tr>
                                     ))
