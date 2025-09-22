@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CollectorProfile;
+use App\Http\Requests\StoreCollectorProfileRequest;
+use App\Http\Requests\UpdateCollectorProfileRequest;
 use App\Models\User;
-use Hash;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Services\CollectorProfileService;
 use Inertia\Inertia;
 
 class CollectorProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $collectorProfileService;
+
+    public function __construct(CollectorProfileService $collectorProfileService)
+    {
+        $this->collectorProfileService = $collectorProfileService;
+    }
+
     public function index()
     {
         $collectors = User::where('role', 'collector')->paginate(10);
@@ -23,53 +26,22 @@ class CollectorProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Admin/ManageUsers/Collectors/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreCollectorProfileRequest $request)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'contact_number' => 'required|string|max:20',
-            'date_of_birth' => 'required|date',
-            'status' => 'nullable|in:active,inactive',
-        ]);
-
-        $user = User::create([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'collector',
-        ]);
+        $user = $this->collectorProfileService->store($request->validated());
 
         if (!$user) {
             return redirect()->back()->withErrors(['error' => 'Failed to create user. Please try again.']);
         }
 
-        $user->collectorProfile()->create([
-            'contact_number' => $validatedData['contact_number'],
-            'date_of_birth' => $validatedData['date_of_birth'],
-            'status' => $validatedData['status'] ?? 'active',
-        ]);
-
         return redirect()->intended('/admin/manage-users/collectors');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(User $collector)
     {
         $collector->load('collectorProfile');
@@ -81,9 +53,6 @@ class CollectorProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $collector)
     {
         $collector->load('collectorProfile');
@@ -95,63 +64,17 @@ class CollectorProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $collector)
+    public function update(UpdateCollectorProfileRequest $request, User $collector)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->ignore($collector->id),
-            ],
-            'current_password' => 'nullable|string|min:8',
-            'password' => 'nullable|string|min:8',
-            'contact_number' => 'required|string|max:20',
-            'date_of_birth' => 'required|date',
-            'status' => 'nullable|in:active,inactive',
-        ]);
-
-        $collector->first_name = $validatedData['first_name'];
-        $collector->last_name = $validatedData['last_name'];
-        $collector->email = $validatedData['email'];
-
-        if (!empty($validatedData['current_password']) && !empty($validatedData['password'])) {
-            if (Hash::check($validatedData['current_password'], $collector->password)) {
-                $collector->password = Hash::make($validatedData['password']);
-            } else {
-                return redirect()->back()->withErrors(['error' => 'Current password is incorrect.']);
-            }
-        }
-
-        $collector->save();
-
-        $collector->collectorProfile()->update([
-            'contact_number' => $validatedData['contact_number'],
-            'date_of_birth' => $validatedData['date_of_birth'],
-            'status' => $validatedData['status'] ?? 'active',
-        ]);
+        $this->collectorProfileService->update($collector, $request->validated());
 
         return redirect()->intended('/admin/manage-users/collectors');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $collector)
     {
-        if (!$collector) {
-            return redirect()->back()->withErrors(['error' => 'Collector not found.']);
-        }
-        if ($collector->collectorProfile) {
-            $collector->collectorProfile()->delete();
-        }
-        $collector->delete();
+        $this->collectorProfileService->destroy($collector);
+
         return redirect()->intended('/admin/manage-users/collectors');
     }
 }

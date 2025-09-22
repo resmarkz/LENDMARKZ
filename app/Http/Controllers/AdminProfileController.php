@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminProfile;
+use App\Http\Requests\StoreAdminProfileRequest;
+use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use App\Services\AdminProfileService;
 use Inertia\Inertia;
 
 class AdminProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $adminProfileService;
+
+    public function __construct(AdminProfileService $adminProfileService)
+    {
+        $this->adminProfileService = $adminProfileService;
+    }
+
     public function index()
     {
         $admins = User::where('role', 'admin')->paginate(10);
@@ -24,33 +27,14 @@ class AdminProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreAdminProfileRequest $request)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'email' => $validatedData['email'],
-            'password' => $validatedData['password'],
-            'role' => 'admin',
-        ]);
+        $user = $this->adminProfileService->store($request->validated());
 
         if (!$user) {
             return back()->withErrors([
@@ -58,14 +42,9 @@ class AdminProfileController extends Controller
             ])->onlyInput('email');
         }
 
-        $user->adminProfile()->create();
-
         return redirect()->intended('/admin/manage-users/admins');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(User $admin)
     {
         $admin->load('adminProfile');
@@ -74,9 +53,6 @@ class AdminProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $admin)
     {
         $admin->load('adminProfile');
@@ -90,52 +66,17 @@ class AdminProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $admin)
+    public function update(UpdateAdminProfileRequest $request, User $admin)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->ignore($admin->id),
-            ],
-            'current_password' => 'nullable|string|min:8',
-            'password' => 'nullable|string|min:8',
-        ]);
+        $this->adminProfileService->update($admin, $request->validated());
 
-        $admin->first_name = $validatedData['first_name'];
-        $admin->last_name = $validatedData['last_name'];
-        $admin->email = $validatedData['email'];
-
-        if (!empty($validatedData['current_password']) && !empty($validatedData['password'])) {
-            if (Hash::check($validatedData['current_password'], $admin->password)) {
-                $admin->password = $validatedData['password'];
-            } else {
-                return back()->withErrors([
-                    'current_password' => 'Current password is incorrect.',
-                ])->onlyInput('current_password');
-            }
-        }
-
-        $admin->save();
         return redirect()->intended('/admin/manage-users/admins');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $admin)
     {
-        if ($admin->adminProfile) {
-            $admin->adminProfile()->delete();
-        }
-        $admin->delete();
+        $this->adminProfileService->destroy($admin);
+
         return redirect()->intended('/admin/manage-users/admins');
     }
 }
