@@ -299,7 +299,7 @@ function AdminDashboardLayout({ children }) {
                             <div className="absolute right-0 mt-2 w-44 rounded-lg bg-white shadow-lg ring-1 ring-black/5">
                                 <div className="py-1">
                                     <Link
-                                        href="/profile"
+                                        href={`/admin/manage-users/admins/${user.id}/edit`}
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                                     >
                                         <FontAwesomeIcon

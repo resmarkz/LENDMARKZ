@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
-import errorHandler from "../../utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const Register = ({ auth }) => {
     const { data, setData, post, errors, processing } = useForm({
@@ -22,7 +22,7 @@ const Register = ({ auth }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/register');
+        post("/register");
     };
 
     return (

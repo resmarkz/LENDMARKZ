@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const CollectorCreate = ({ auth }) => {
     const { data, setData, post, processing, errors } = useForm({

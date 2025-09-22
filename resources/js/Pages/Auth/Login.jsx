@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
-import errorHandler from "@/utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const Login = ({ auth }) => {
     const { data, setData, post, errors, processing } = useForm({
