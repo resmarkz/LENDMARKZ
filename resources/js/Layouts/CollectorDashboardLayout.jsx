@@ -49,9 +49,9 @@ function CollectorDashboardLayout({ children }) {
                     href: "/collector/loans",
                 },
                 {
-                    name: "Record Payment",
-                    icon: "fas fa-money-check-alt",
-                    href: "/collector/payments/create",
+                    name: "Payment List",
+                    icon: "fas fa-wallet",
+                    href: "/collector/payments",
                 },
             ],
         },

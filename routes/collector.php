@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\CollectorDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth', "role:collector"])->prefix('collector')->name('collector.')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Collector/Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [CollectorDashboardController::class, '__invoke'])->name('dashboard');
 
     Route::get('/loans', function () {
         return Inertia::render('Collector/Index');
