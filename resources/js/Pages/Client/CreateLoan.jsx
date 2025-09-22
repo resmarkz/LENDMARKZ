@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import ClientDashboardLayout from "@/Layouts/ClientDashboardLayout";
-import errorHandler from "@/Utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 export default function ApplyLoan() {
     const { data, setData, post, processing, errors, reset } = useForm({
