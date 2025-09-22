@@ -38,6 +38,12 @@ class PaymentService
                     $query->where('status', $status);
                 }
             })
+            ->when(request()->input('start_date'), function ($query, $start_date) {
+                $query->whereDate('payment_date', '>=', $start_date);
+            })
+            ->when(request()->input('end_date'), function ($query, $end_date) {
+                $query->whereDate('payment_date', '<=', $end_date);
+            })
             ->paginate(10);
 
         return [$payments, $filters];
