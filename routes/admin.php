@@ -34,9 +34,10 @@ Route::middleware(['auth', "role:admin"])->prefix('admin')->name('admin.')->grou
         })->name('edit');
     });
 
+    Route::get('/reports/generate', App\Http\Controllers\Admin\AdminReportController::class)->name('reports.generate');
     Route::get('/reports', function () {
         return Inertia::render('Admin/Reports/Index');
-    })->name('reports');
+    })->name('reports.index');
 
     Route::prefix('manage-users')->name('manage-users.')->group(function () {
         Route::prefix('admins')->name('admins.')->group(function () {

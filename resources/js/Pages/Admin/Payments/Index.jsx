@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import formatCurrency from "@/utils/formatCurrency";
-import successHandler from "@/utils/successHandler";
-import errorHandler from "@/utils/errorHandler";
 import Pagination from "@/Components/Pagination";
 import formatDate from "@/utils/formatDate";
 
@@ -11,8 +9,6 @@ const PaymentIndex = ({
     auth,
     payments,
     filters = {},
-    success = {},
-    error = {},
     clients = [],
     collectors = [],
 }) => {
@@ -25,14 +21,6 @@ const PaymentIndex = ({
         reference_no: filters.reference_no || "",
         loan_id: filters.loan_id || "",
     });
-
-    useEffect(() => {
-        successHandler(success);
-    }, [success]);
-
-    useEffect(() => {
-        errorHandler(error);
-    }, [error]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
