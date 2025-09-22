@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/Utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const CreateContactReference = ({ auth, client }) => {
     const { data, setData, post, processing, errors, reset } = useForm({

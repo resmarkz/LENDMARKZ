@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const ClientCreate = ({ auth }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -140,9 +140,7 @@ const ClientCreate = ({ auth }) => {
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             placeholder="Enter client address"
                             value={data.address}
-                            onChange={(e) =>
-                                setData("address", e.target.value)
-                            }
+                            onChange={(e) => setData("address", e.target.value)}
                         />
                     </div>
                     <div>

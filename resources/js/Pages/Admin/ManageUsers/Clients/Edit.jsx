@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/Utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const ClientEdit = ({ auth, client }) => {
     const { data, setData, processing, errors, post } = useForm({

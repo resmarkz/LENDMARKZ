@@ -7,14 +7,31 @@ import {
     faUser,
     faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import { successHandler, errorHandler } from "@/Utils/alertsHandler";
 
-function AdminDashboardLayout({ children, auth }) {
+function AdminDashboardLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openDropdowns, setOpenDropdowns] = useState({});
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const userDropdownRef = useRef(null);
-    const { url } = usePage();
+    const {
+        url,
+        props: { flash, auth, errors },
+    } = usePage();
     const user = auth?.user;
+
+    useEffect(() => {
+        if (flash?.success) {
+            successHandler(flash.success);
+        }
+        if (flash?.error) {
+            errorHandler(flash.error);
+        }
+    }, [flash]);
+
+    useEffect(() => {
+        errorHandler(errors);
+    }, [errors]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

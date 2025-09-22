@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
-import errorHandler from "@/utils/errorHandler";
+import { errorHandler } from "@/utils/alertsHandler";
 
 const LoanEdit = ({ ...props }) => {
     const { auth, collectors, clients, loan } = props;
@@ -92,7 +92,9 @@ const LoanEdit = ({ ...props }) => {
                             id="principal_amount"
                             name="principal_amount"
                             value={data.principal_amount}
-                            onChange={(e) => setData("principal_amount", e.target.value)}
+                            onChange={(e) =>
+                                setData("principal_amount", e.target.value)
+                            }
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
@@ -181,7 +183,7 @@ const LoanEdit = ({ ...props }) => {
                             readOnly
                         />
                     </div>
-                    
+
                     <div>
                         <label
                             htmlFor="status"
