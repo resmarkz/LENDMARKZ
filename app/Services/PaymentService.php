@@ -6,7 +6,6 @@ use App\Models\ClientProfile;
 use App\Models\CollectorProfile;
 use App\Models\Payment;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class PaymentService
 {
@@ -15,35 +14,21 @@ class PaymentService
         $filters = request()->only(['client_id', 'collector_id', 'status', 'start_date', 'end_date', 'reference_no', 'loan_id']);
 
         $payments = Payment::with(['loan.clientProfile.user', 'loan.collectorProfile.user'])
-            ->when(request()->input('reference_no'), function ($query, $reference_no) {
-                $query->where('reference_no', 'like', "%{$reference_no}%");
-            })
-            ->when(request()->input('loan_id'), function ($query, $loan_id) {
-                $query->where('loan_id', $loan_id);
-            })
-            ->when(request()->input('client_id'), function ($query, $client_id) {
-                $query->whereHas('loan.clientProfile', function ($q) use ($client_id) {
-                    $q->where('id', $client_id);
-                });
-            })
-            ->when(request()->input('collector_id'), function ($query, $collector_id) {
-                $query->whereHas('loan.collectorProfile', function ($q) use ($collector_id) {
-                    $q->where('id', $collector_id);
-                });
-            })
-            ->when(request()->input('status'), function ($query, $status) {
+            ->when($filters['reference_no'] ?? null, fn($q, $ref) => $q->where('reference_no', 'like', "%{$ref}%"))
+            ->when($filters['loan_id'] ?? null, fn($q, $loanId) => $q->where('loan_id', $loanId))
+            ->when($filters['client_id'] ?? null, fn($q, $clientId) =>
+            $q->whereHas('loan.clientProfile', fn($q2) => $q2->where('id', $clientId)))
+            ->when($filters['collector_id'] ?? null, fn($q, $collectorId) =>
+            $q->whereHas('loan.collectorProfile', fn($q2) => $q2->where('id', $collectorId)))
+            ->when($filters['status'] ?? null, function ($q, $status) {
                 if ($status === 'overdue') {
-                    $query->where('due_date', '<', now())->where('status', 'pending');
+                    $q->where('due_date', '<', now())->where('status', 'pending');
                 } else {
-                    $query->where('status', $status);
+                    $q->where('status', $status);
                 }
             })
-            ->when(request()->input('start_date'), function ($query, $start_date) {
-                $query->whereDate('payment_date', '>=', $start_date);
-            })
-            ->when(request()->input('end_date'), function ($query, $end_date) {
-                $query->whereDate('payment_date', '<=', $end_date);
-            })
+            ->when($filters['start_date'] ?? null, fn($q, $start) => $q->whereDate('payment_date', '>=', $start))
+            ->when($filters['end_date'] ?? null, fn($q, $end) => $q->whereDate('payment_date', '<=', $end))
             ->paginate(10);
 
         return [$payments, $filters];
@@ -64,13 +49,48 @@ class PaymentService
         }
 
         $currentLoanData = [
-            "id" => $currentLoan->id,
+            "id"               => $currentLoan->id,
             "principal_amount" => $currentLoan->principal_amount,
-            "interest_rate" => $currentLoan->interest_rate,
-            "term_months" => $currentLoan->term_months,
+            "interest_rate"    => $currentLoan->interest_rate,
+            "term_months"      => $currentLoan->term_months,
         ];
 
         return [$currentLoanData, $currentLoan->payments, null];
+    }
+
+    public function getPaymentsForCollector(User $collector)
+    {
+        $filters = request()->only(['client_id', 'status', 'start_date', 'end_date', 'reference_no', 'loan_id']);
+
+        $payments = Payment::with(['loan.clientProfile.user', 'loan.collectorProfile.user'])
+            ->whereHas('loan', fn($q) => $q->where('collector_profile_id', $collector->collectorProfile->id))
+            ->when($filters['reference_no'] ?? null, fn($q, $ref) => $q->where('reference_no', 'like', "%{$ref}%"))
+            ->when($filters['loan_id'] ?? null, fn($q, $loanId) => $q->where('loan_id', $loanId))
+            ->when(
+                $filters['client_id'] ?? null,
+                fn($q, $userId) =>
+                $q->whereHas('loan.clientProfile.user', fn($q2) => $q2->where('id', $userId))
+            )
+            ->when($filters['status'] ?? null, function ($q, $status) {
+                if ($status === 'overdue') {
+                    $q->where('due_date', '<', now())->where('status', 'pending');
+                } else {
+                    $q->where('status', $status);
+                }
+            })
+            ->paginate(10);
+
+        return [$payments, $filters];
+    }
+
+    public function getClientsForCollector(User $collector)
+    {
+        $collector->load('collectorProfile.loans.clientProfile.user');
+
+        return $collector->collectorProfile->loans
+            ->pluck('clientProfile.user')
+            ->unique('id')
+            ->values();
     }
 
     public function getPaymentData(Payment $payment)
@@ -78,25 +98,25 @@ class PaymentService
         $payment->load(['loan.clientProfile.user', 'loan.collectorProfile.user']);
 
         return [
-            'id' => $payment->id,
-            'loan_id' => $payment->loan_id,
-            'collector_id' => $payment->loan->collectorProfile->id,
+            'id'                  => $payment->id,
+            'loan_id'             => $payment->loan_id,
+            'collector_id'        => $payment->loan->collectorProfile->id,
             'collector_first_name' => $payment->loan->collectorProfile->user->first_name,
             'collector_last_name' => $payment->loan->collectorProfile->user->last_name,
-            'client_id' => $payment->loan->clientProfile->id,
-            'client_first_name' => $payment->loan->clientProfile->user->first_name,
-            'client_last_name' => $payment->loan->clientProfile->user->last_name,
-            'client_email' => $payment->loan->clientProfile->user->email,
-            'principal_amount' => $payment->principal_amount,
-            'interest_amount' => $payment->interest_amount,
-            'total_amount' => $payment->total_amount,
-            'amount_paid' => $payment->amount_paid,
-            'due_date' => $payment->due_date ? $payment->due_date->format('Y-m-d') : null,
-            'payment_date' => $payment->payment_date ? $payment->payment_date->format('Y-m-d') : null,
-            'payment_method' => $payment->payment_method,
-            'reference_no' => $payment->reference_no,
-            'is_paid' => $payment->is_paid,
-            'status' => $payment->status,
+            'client_id'           => $payment->loan->clientProfile->id,
+            'client_first_name'   => $payment->loan->clientProfile->user->first_name,
+            'client_last_name'    => $payment->loan->clientProfile->user->last_name,
+            'client_email'        => $payment->loan->clientProfile->user->email,
+            'principal_amount'    => $payment->principal_amount,
+            'interest_amount'     => $payment->interest_amount,
+            'total_amount'        => $payment->total_amount,
+            'amount_paid'         => $payment->amount_paid,
+            'due_date'            => $payment->due_date?->format('Y-m-d'),
+            'payment_date'        => $payment->payment_date?->format('Y-m-d'),
+            'payment_method'      => $payment->payment_method,
+            'reference_no'        => $payment->reference_no,
+            'is_paid'             => $payment->is_paid,
+            'status'              => $payment->status,
         ];
     }
 

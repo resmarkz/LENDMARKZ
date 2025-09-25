@@ -6,7 +6,6 @@ import formatDate from "@/Utils/formatDate";
 
 const ClientPaymentIndex = ({ auth, payments, currentLoan }) => {
     const actualPayments = payments.filter((p) => p.amount_paid !== null);
-    console.log(currentLoan);
 
     return (
         <ClientDashboardLayout auth={auth}>

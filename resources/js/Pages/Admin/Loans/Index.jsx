@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Link, router } from "@inertiajs/react";
+import React from "react";
+import { Link, useForm, router } from "@inertiajs/react";
 import AdminDashboardLayout from "@/Layouts/AdminDashboardLayout";
 import formatCurrency from "@/utils/formatCurrency";
 import Pagination from "@/Components/Pagination";
 
 const LoanIndex = ({ auth, loans, filters, collectors }) => {
-    const [values, setValues] = useState({
+    const { data, setData, get, reset } = useForm({
         search: filters.search || "",
         status: filters.status || "",
         collector_id: filters.collector_id || "",
@@ -17,39 +17,21 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
         max_interest: filters.max_interest || "",
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        router.get("/admin/loans", values, {
+        get("/admin/loans", {
             preserveState: true,
             replace: true,
         });
     };
 
     const handleClear = () => {
-        setValues({
-            search: "",
-            status: "",
-            collector_id: "",
-            start_date: "",
-            end_date: "",
-            min_principal: "",
-            max_principal: "",
-            min_interest: "",
-            max_interest: "",
-        });
+        reset();
         router.get(
             "/admin/loans",
             {},
             {
-                preserveState: true,
+                preserveState: false,
                 replace: true,
             }
         );
@@ -88,8 +70,10 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="text"
                                 name="search"
                                 id="search"
-                                value={values.search}
-                                onChange={handleChange}
+                                value={data.search}
+                                onChange={(e) =>
+                                    setData("search", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Search by client name..."
                             />
@@ -106,16 +90,16 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                             <select
                                 name="status"
                                 id="status"
-                                value={values.status}
-                                onChange={handleChange}
+                                value={data.status}
+                                onChange={(e) =>
+                                    setData("status", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             >
                                 <option value="">All</option>
                                 <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
                                 <option value="active">Active</option>
                                 <option value="paid">Paid</option>
-                                <option value="defaulted">Defaulted</option>
                             </select>
                         </div>
 
@@ -130,8 +114,10 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                             <select
                                 name="collector_id"
                                 id="collector_id"
-                                value={values.collector_id}
-                                onChange={handleChange}
+                                value={data.collector_id}
+                                onChange={(e) =>
+                                    setData("collector_id", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             >
                                 <option value="">All</option>
@@ -148,7 +134,7 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                         </div>
 
                         {/* Release Date Range */}
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="start_date"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -159,12 +145,14 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="date"
                                 name="start_date"
                                 id="start_date"
-                                value={values.start_date}
-                                onChange={handleChange}
+                                value={data.start_date}
+                                onChange={(e) =>
+                                    setData("start_date", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             />
                         </div>
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="end_date"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -175,14 +163,16 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="date"
                                 name="end_date"
                                 id="end_date"
-                                value={values.end_date}
-                                onChange={handleChange}
+                                value={data.end_date}
+                                onChange={(e) =>
+                                    setData("end_date", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             />
                         </div>
 
                         {/* Principal Amount Range */}
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="min_principal"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -193,13 +183,15 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="number"
                                 name="min_principal"
                                 id="min_principal"
-                                value={values.min_principal}
-                                onChange={handleChange}
+                                value={data.min_principal}
+                                onChange={(e) =>
+                                    setData("min_principal", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="e.g., 1000"
                             />
                         </div>
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="max_principal"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -210,15 +202,17 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="number"
                                 name="max_principal"
                                 id="max_principal"
-                                value={values.max_principal}
-                                onChange={handleChange}
+                                value={data.max_principal}
+                                onChange={(e) =>
+                                    setData("max_principal", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="e.g., 5000"
                             />
                         </div>
 
                         {/* Interest Rate Range */}
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="min_interest"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -229,13 +223,15 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="number"
                                 name="min_interest"
                                 id="min_interest"
-                                value={values.min_interest}
-                                onChange={handleChange}
+                                value={data.min_interest}
+                                onChange={(e) =>
+                                    setData("min_interest", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="e.g., 1"
                             />
                         </div>
-                        <div className="col-span-1">
+                        <div>
                             <label
                                 htmlFor="max_interest"
                                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -246,8 +242,10 @@ const LoanIndex = ({ auth, loans, filters, collectors }) => {
                                 type="number"
                                 name="max_interest"
                                 id="max_interest"
-                                value={values.max_interest}
-                                onChange={handleChange}
+                                value={data.max_interest}
+                                onChange={(e) =>
+                                    setData("max_interest", e.target.value)
+                                }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="e.g., 5"
                             />

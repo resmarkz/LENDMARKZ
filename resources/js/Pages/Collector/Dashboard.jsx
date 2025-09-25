@@ -1,6 +1,7 @@
 import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import CollectorDashboardLayout from "@/Layouts/CollectorDashboardLayout";
+import formatCurrency from "@/Utils/formatCurrency";
 
 const CollectorDashboard = ({
     assignedLoansCount,
@@ -36,7 +37,7 @@ const CollectorDashboard = ({
                                 Payments Collected Today
                             </p>
                             <p className="text-3xl font-bold">
-                                {paymentCollectedToday}
+                                {formatCurrency(paymentCollectedToday)}
                             </p>
                         </div>
                         <i className="fas fa-money-bill-wave text-4xl opacity-50"></i>

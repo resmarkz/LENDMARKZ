@@ -61,6 +61,30 @@ class LoanService
             ]);
     }
 
+    public function getLoansForCollector(Request $request)
+    {
+        $collector = Auth::user()->collectorProfile;
+
+        $loansQuery = $collector->loans()
+            ->when($request->input('loan_id'), fn($q, $loanId) => $q->where('id', $loanId))
+            ->when($request->input('status'), fn($q, $status) => $q->where('status', $status))
+            ->when($request->input('due_date'), fn($q, $due) => $q->whereDate('due_date', $due));
+
+        return $loansQuery->paginate(10)
+            ->through(fn($loan) => [
+                'id'               => $loan->id,
+                'client'           => $loan->clientProfile?->user?->first_name . ' ' . $loan->clientProfile?->user?->last_name,
+                'principal_amount' => $loan->principal_amount,
+                'interest_rate'    => $loan->interest_rate,
+                'term_months'      => $loan->term_months,
+                'monthly_payment'  => $loan->monthly_payment,
+                'total_payable'    => $loan->total_payable,
+                'release_date'     => $loan->release_date?->toDateString(),
+                'due_date'         => $loan->due_date?->toDateString(),
+                'status'           => $loan->status,
+            ]);
+    }
+
     public function getLoanForAdmin(Loan $loan)
     {
         $loan->load(['clientProfile.user', 'collectorProfile.user', 'payments']);
@@ -240,7 +264,7 @@ class LoanService
         }
 
         $monthlyPayment = round($rawMonthlyPayment, 2);
-        $totalPayable   = round($rawMonthlyPayment * $termMonths,.2);
+        $totalPayable   = round($rawMonthlyPayment * $termMonths, .2);
 
         return [
             'monthly_payment' => $monthlyPayment,

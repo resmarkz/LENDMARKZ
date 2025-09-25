@@ -47,6 +47,12 @@ class LoanController extends Controller
             return Inertia::render('Client/Index', [
                 'loans' => $loans,
             ]);
+        } elseif ($userRole === 'collector') {
+            $loans = $this->loanService->getLoansForCollector($request);
+            return Inertia::render('Collector/Index', [
+                'loans' => $loans,
+                'filters' => $request->all(['loan_id', 'due_date', 'status']),
+            ]);
         } else {
             abort(403, 'Unauthorized action.');
         }

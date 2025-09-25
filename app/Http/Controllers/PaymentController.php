@@ -24,15 +24,15 @@ class PaymentController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $userRole = Auth::check() ? Auth::user()->role : null;
+        $userRole = Auth::check() ? $user->role : null;
 
         if ($userRole === 'admin') {
             [$payments, $filters] = $this->paymentService->getPaymentsForAdmin();
 
             return Inertia::render('Admin/Payments/Index', [
-                'payments' => $payments,
-                'filters' => $filters,
-                'clients' => ClientProfile::with('user')->get(),
+                'payments'   => $payments,
+                'filters'    => $filters,
+                'clients'    => ClientProfile::with('user')->get(),
                 'collectors' => CollectorProfile::with('user')->get(),
             ]);
         } elseif ($userRole === 'client') {
@@ -44,13 +44,20 @@ class PaymentController extends Controller
 
             return Inertia::render('Client/Payments/Index', [
                 'currentLoan' => $currentLoanData,
-                'payments' => $payments,
+                'payments'    => $payments,
             ]);
         } elseif ($userRole === 'collector') {
-            return "";
-        } else {
-            return abort(403, 'Unauthorized action.');
+            [$payments, $filters] = $this->paymentService->getPaymentsForCollector($user);
+            $clients = $this->paymentService->getClientsForCollector($user);
+
+            return Inertia::render('Collector/Payments/Index', [
+                'payments' => $payments,
+                'filters'  => $filters,
+                'clients'  => $clients,
+            ]);
         }
+
+        return abort(403, 'Unauthorized action.');
     }
 
     public function create(Payment $payment)
